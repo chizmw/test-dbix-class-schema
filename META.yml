@@ -1,0 +1,20 @@
+--- 
+abstract: DBIx::Class schema sanity checking tests
+author: 
+  - Chisel Wright C<< <chiselwright@users.berlios.de> >>
+build_requires: 
+  Test::More: 0.72
+distribution_type: module
+generated_by: Module::Install version 0.68
+license: perl
+meta-spec: 
+  url: http://module-build.sourceforge.net/META-spec-v1.3.html
+  version: 1.3
+name: Test-DBIx-Class-Schema
+no_index: 
+  directory: 
+    - inc
+    - t
+requires: 
+  Test::More: 0.72
+version: 0.01003

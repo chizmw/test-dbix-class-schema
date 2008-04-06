@@ -1,0 +1,12 @@
+This file documents the revision history for Test::DBIx::Class::Schema.
+
+0.01002 2008-04-05 01:28
+    - fixed Makefile.PL (missing name)
+    - added README (I'm such a bad boy!)
+
+0.01001 2008-04-05 01:08
+    - Added Changes (this file!)
+    - fixed module name thinko in POD
+
+0.01000 2008-04-04 19:35
+    - Initial module release
