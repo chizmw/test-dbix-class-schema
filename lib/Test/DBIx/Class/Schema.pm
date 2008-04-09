@@ -6,7 +6,7 @@ use warnings;
 # Always remember to do all digits for the version even if they're 0
 # i.e. first release of 0.XX *must* be 0.XX000. This avoids fBSD ports
 # brain damage and presumably various other packaging systems too
-our $VERSION = '0.01003';
+our $VERSION = '0.01004';
 
 use Test::More;
 
@@ -30,13 +30,28 @@ sub run_tests {
     my ($self) = @_;
     my ($schema, $record, $resultset);
 
+    my @std_method_types        = qw(columns relations);
+    my @special_method_types    = qw(custom);
+    my @resultset_method_types  = qw(resultsets);
+
     $self->{num_tests} =
-          7                             # fixed number of tests
-        + @{ $self->{methods}->{columns}   }
-        + @{ $self->{methods}->{relations} }
-        + @{ $self->{methods}->{custom}    }
+          3                             # fixed number of tests
     ;
 
+    # each @std_method_types has a can_ok() and a test for each item
+    foreach my $type (@std_method_types) {
+        $self->{num_tests} += (1 + @{ $self->{methods}->{$type} });
+    }
+    # each @special_method_types has one test, can_ok()
+    foreach my $type (@special_method_types) {
+        $self->{num_tests} ++;
+    }
+    # each @resultset_method_types has one test, can_ok()
+    foreach my $type (@special_method_types) {
+        $self->{num_tests} ++;
+    }
+
+    # set the number of tests we plan to run
     plan tests => $self->{num_tests};
 
     # make sure we can use the schema (namespace) module
@@ -44,7 +59,9 @@ sub run_tests {
 
     # get a schema to query
     $schema = $self->{namespace}->connect(
-        $self->{dsn}
+        $self->{dsn},
+        $self->{username},
+        $self->{password},
     );
     isa_ok($schema, $self->{namespace});
 
@@ -65,11 +82,11 @@ sub run_tests {
         $record = $schema->resultset( $self->{moniker} )->search({})->first();
         isa_ok($record, $self->{namespace} . '::' . $self->{moniker});
 
-        my @std_method_types = qw(columns relations custom);
-
         eval {
             $schema->txn_do(
                 sub {
+                    # 'normal' methods; row & relation
+                    # we can try calling these as they gave no side-effects
                     foreach my $method_type (@std_method_types) {
                         SKIP: {
                             if (not @{ $self->{methods}->{$method_type} }) {
@@ -88,17 +105,35 @@ sub run_tests {
                         }
                     } # foreach
 
-                    # resultset class methods - we need something slightly different here
-                    SKIP: {
-                        skip qq{no resultsets methods}, 1
-                            unless @{ $self->{methods}->{resultsets} };
+                    # 'special' methods; custom
+                    # we can't call these as they may have unknown parameters,
+                    # side effects, etc
+                    foreach my $method_type (@special_method_types) {
+                        SKIP: {
+                            if (not @{ $self->{methods}->{$method_type} }) {
+                                skip qq{no $method_type methods}, 1;
+                            }
 
-                        $resultset = $schema->resultset( $self->{moniker} )->search({});
-                        can_ok(
-                            $resultset,
-                            @{ $self->{methods}->{resultsets} },
-                        );
-                    } # SKIP, no resultsets
+                            can_ok(
+                                $record,
+                                @{ $self->{methods}->{$method_type} },
+                            );
+                        }
+                    } # foreach
+
+                    # resultset class methods - we need something slightly different here
+                    foreach my $method_type (@resultset_method_types) {
+                        SKIP: {
+                            skip qq{no resultsets methods}, 1
+                                unless @{ $self->{methods}->{resultsets} };
+
+                            $resultset = $schema->resultset( $self->{moniker} )->search({});
+                            can_ok(
+                                $resultset,
+                                @{ $self->{methods}->{resultsets} },
+                            );
+                        } # SKIP, no resultsets
+                    } # foreach
 
 
                     # rollback any evil changes that crept through from the
@@ -147,9 +182,13 @@ Create a test script that looks like this:
     # create a new test object
     my $schematest = Test::DBIx::Class::Schema->new(
         {
+            # required
             dsn       => 'dbi:Pg:dbname=mydb',
             namespace => 'MyDB::Schema',
             moniker   => 'SomeTable',
+            # optional
+            username  => 'some_user',
+            password  => 'opensesame',
         }
     );
 
