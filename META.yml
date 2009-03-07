@@ -3,6 +3,7 @@ abstract: DBIx::Class schema sanity checking tests
 author: 
   - Chisel Wright C<< <chiselwright@users.berlios.de> >>
 build_requires: 
+  FindBin: 0
   Test::More: 0.72
 distribution_type: module
 generated_by: Module::Install version 0.68
@@ -17,4 +18,4 @@ no_index:
     - t
 requires: 
   Test::More: 0.72
-version: 0.01004
+version: 0.01005
