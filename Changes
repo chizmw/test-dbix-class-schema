@@ -1,5 +1,9 @@
 This file documents the revision history for Test::DBIx::Class::Schema.
 
+0.01005 Thu Oct  1 11:58:22 BST 2009
+    - added tests for $rs methods that *don't* rely on table having data
+    - removed test planning in favour of "done_testing"
+
 0.01004 Tue Apr  8 11:47:33 BST 2008
     - added username/password options to new()
     - fixed test plan count

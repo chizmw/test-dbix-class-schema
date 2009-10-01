@@ -18,4 +18,14 @@ MANIFEST			This list of files
 MANIFEST.SKIP
 META.yml
 README
+SIGNATURE
 t/10.test.dbix.class.schema.t
+t/11.testdata.t
+t/12.run_tests.t
+t/lib/sqlite.sql
+t/lib/TDCSTest.pm
+t/lib/TDCSTest/Schema.pm
+t/lib/TDCSTest/Schema/Artist.pm
+t/lib/TDCSTest/Schema/CD.pm
+t/lib/TDCSTest/Schema/Track.pm
+t/var/DBIxClass.db

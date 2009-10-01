@@ -6,9 +6,10 @@ use warnings;
 # Always remember to do all digits for the version even if they're 0
 # i.e. first release of 0.XX *must* be 0.XX000. This avoids fBSD ports
 # brain damage and presumably various other packaging systems too
-our $VERSION = '0.01004';
+our $VERSION = '0.01005';
 
-use Test::More;
+# ensure we have "done_testing"
+use Test::More 0.92;
 
 sub new {
     my ($proto, $options) = @_;
@@ -30,41 +31,31 @@ sub run_tests {
     my ($self) = @_;
     my ($schema, $record, $resultset);
 
-    my @std_method_types        = qw(columns relations);
-    my @special_method_types    = qw(custom);
-    my @resultset_method_types  = qw(resultsets);
-
-    $self->{num_tests} =
-          3                             # fixed number of tests
-    ;
-
-    # each @std_method_types has a can_ok() and a test for each item
-    foreach my $type (@std_method_types) {
-        $self->{num_tests} += (1 + @{ $self->{methods}->{$type} });
-    }
-    # each @special_method_types has one test, can_ok()
-    foreach my $type (@special_method_types) {
-        $self->{num_tests} ++;
-    }
-    # each @resultset_method_types has one test, can_ok()
-    foreach my $type (@special_method_types) {
-        $self->{num_tests} ++;
-    }
-
-    # set the number of tests we plan to run
-    plan tests => $self->{num_tests};
-
     # make sure we can use the schema (namespace) module
     use_ok( $self->{namespace} );
 
-    # get a schema to query
-    $schema = $self->{namespace}->connect(
-        $self->{dsn},
-        $self->{username},
-        $self->{password},
-    );
+    # let users pass in an existing $schema if they (somehow) have one
+    if (defined $self->{schema}) {
+        $schema = $self->{schema};
+    }
+    else {
+        # get a schema to query
+        $schema = $self->{namespace}->connect(
+            $self->{dsn},
+            $self->{username},
+            $self->{password},
+        );
+    }
     isa_ok($schema, $self->{namespace});
 
+    # create a new resultset object and perform tests on it
+    # - this allows us to test ->my_column() without requiring data
+    my $rs = $schema->resultset( $self->{moniker} )->new({});
+    $self->_test_normal_methods($rs);
+    $self->_test_special_methods($rs);
+    $self->_test_resultset_methods($rs);
+
+    # if we have at least one record, test with that too
     SKIP: {
         # if we don't have any records, it's pretty hard to test
         # available methods
@@ -87,53 +78,9 @@ sub run_tests {
                 sub {
                     # 'normal' methods; row & relation
                     # we can try calling these as they gave no side-effects
-                    foreach my $method_type (@std_method_types) {
-                        SKIP: {
-                            if (not @{ $self->{methods}->{$method_type} }) {
-                                skip qq{no $method_type methods}, 1;
-                            }
-
-                            can_ok(
-                                $record,
-                                @{ $self->{methods}->{$method_type} },
-                            );
-                            # try calling each method
-                            foreach my $method ( @{ $self->{methods}->{$method_type} } ) {
-                                eval { $record->$method };
-                                is($@, q{}, qq{calling $method() didn't barf});
-                            }
-                        }
-                    } # foreach
-
-                    # 'special' methods; custom
-                    # we can't call these as they may have unknown parameters,
-                    # side effects, etc
-                    foreach my $method_type (@special_method_types) {
-                        SKIP: {
-                            if (not @{ $self->{methods}->{$method_type} }) {
-                                skip qq{no $method_type methods}, 1;
-                            }
-
-                            can_ok(
-                                $record,
-                                @{ $self->{methods}->{$method_type} },
-                            );
-                        }
-                    } # foreach
-
-                    # resultset class methods - we need something slightly different here
-                    foreach my $method_type (@resultset_method_types) {
-                        SKIP: {
-                            skip qq{no resultsets methods}, 1
-                                unless @{ $self->{methods}->{resultsets} };
-
-                            $resultset = $schema->resultset( $self->{moniker} )->search({});
-                            can_ok(
-                                $resultset,
-                                @{ $self->{methods}->{resultsets} },
-                            );
-                        } # SKIP, no resultsets
-                    } # foreach
+                    $self->_test_normal_methods($record);
+                    $self->_test_special_methods($record);
+                    $self->_test_resultset_methods($record);
 
 
                     # rollback any evil changes that crept through from the
@@ -148,6 +95,82 @@ sub run_tests {
 
     } # SKIP, no records
 }
+
+sub _test_normal_methods {
+    my $self    = shift;
+    my $record  = shift;
+
+    my @std_method_types        = qw(columns relations);
+
+    # 'normal' methods; row & relation
+    # we can try calling these as they gave no side-effects
+    foreach my $method_type (@std_method_types) {
+        SKIP: {
+            if (not @{ $self->{methods}->{$method_type} }) {
+                skip qq{no $method_type methods}, 1;
+            }
+
+            can_ok(
+                $record,
+                @{ $self->{methods}->{$method_type} },
+            );
+            # try calling each method
+            foreach my $method ( @{ $self->{methods}->{$method_type} } ) {
+                eval { $record->$method };
+                is($@, q{}, qq{calling $method() didn't barf});
+            }
+        }
+    } # foreach
+    return;
+}
+
+sub _test_special_methods {
+    my $self    = shift;
+    my $record  = shift;
+
+    my @special_method_types    = qw(custom);
+
+    # 'special' methods; custom
+    # we can't call these as they may have unknown parameters,
+    # side effects, etc
+    foreach my $method_type (@special_method_types) {
+        SKIP: {
+            if (not @{ $self->{methods}->{$method_type} }) {
+                skip qq{no $method_type methods}, 1;
+            }
+
+            can_ok(
+                $record,
+                @{ $self->{methods}->{$method_type} },
+            );
+        }
+    } # foreach
+    return;
+}
+
+sub _test_resultset_methods {
+    my $self        = shift;
+    my $resultset   = shift;
+
+    my @resultset_method_types  = qw(resultsets);
+
+    # resultset class methods - we need something slightly different here
+    foreach my $method_type (@resultset_method_types) {
+        SKIP: {
+            skip qq{no resultsets methods}, 1
+                unless @{ $self->{methods}->{resultsets} };
+
+            can_ok(
+                $resultset,
+                @{ $self->{methods}->{resultsets} },
+            );
+        } # SKIP, no resultsets
+    } # foreach
+    return;
+}
+
+1;
+__END__
 
 =pod
 
@@ -226,6 +249,9 @@ Create a test script that looks like this:
 
     # run the tests
     $schematest->run_tests();
+
+    # let the test framework know you're done
+    done_testing;
 
 Run the test script:
 
