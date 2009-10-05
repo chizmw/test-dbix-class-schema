@@ -6,7 +6,7 @@ use warnings;
 # Always remember to do all digits for the version even if they're 0
 # i.e. first release of 0.XX *must* be 0.XX000. This avoids fBSD ports
 # brain damage and presumably various other packaging systems too
-our $VERSION = '0.01005';
+our $VERSION = '0.01006';
 
 # ensure we have "done_testing"
 use Test::More 0.92;
@@ -55,24 +55,16 @@ sub run_tests {
     $self->_test_special_methods($rs);
     $self->_test_resultset_methods($rs);
 
-    # if we have at least one record, test with that too
+    # get an object to test methods against
+    $record = $schema->resultset( $self->{moniker} )->search({})->first();
+
+    # no actual records - don't test against nothingness
     SKIP: {
-        # if we don't have any records, it's pretty hard to test
-        # available methods
-        if (not $schema->resultset( $self->{moniker} )->search({})->count()) {
-            if ($ENV{TEST_VERBOSE}) {
-                diag qq{no records in $self->{moniker}};
-            }
-            skip
-                qq{no records in $self->{moniker}},
-                ($self->{num_tests} - 2)
-            ;
-        }
+        skip q{no records in the table}, 1
+            if (not defined $record);
 
-        # get an object to test methods against
-        $record = $schema->resultset( $self->{moniker} )->search({})->first();
+        # run tests on real records
         isa_ok($record, $self->{namespace} . '::' . $self->{moniker});
-
         eval {
             $schema->txn_do(
                 sub {
@@ -89,11 +81,13 @@ sub run_tests {
                 }
             )
         };
-        if ($@) {
-            warn $@;
+        if (my $e=$@) {
+            warn $e;
         }
+    }; # end SKIP
 
-    } # SKIP, no records
+    done_testing
+        unless $ENV{TEST_AGGREGATE};
 }
 
 sub _test_normal_methods {
@@ -150,7 +144,8 @@ sub _test_special_methods {
 
 sub _test_resultset_methods {
     my $self        = shift;
-    my $resultset   = shift;
+    my $schema      = shift->result_source->schema;
+    my $resultset   = $schema->resultset( $self->{moniker} );
 
     my @resultset_method_types  = qw(resultsets);
 
@@ -250,16 +245,27 @@ Create a test script that looks like this:
     # run the tests
     $schematest->run_tests();
 
-    # let the test framework know you're done
-    done_testing;
-
 Run the test script:
 
   prove -l t/schematest/xx.mydb.t
 
+=head2 done_testing
+
+Under normal circumstances there is no need to add C<done_testing> to your
+test script; it's automatically called at the end of C<run_tests()> I<unless>
+you are running tests under L<Test::Aggregate>.
+
+If you are running aggregated tests you will need to add
+
+  done_testing;
+
+to your top-level script.
+
 =head1 SEE ALSO
 
-L<DBIx::Class>
+L<DBIx::Class>,
+L<Test::More>,
+L<Test::Aggregate>
 
 =head1 AUTHOR
 
@@ -267,7 +273,7 @@ Chisel Wright C<< <chiselwright@users.berlios.de> >>
 
 =head1 LICENSE
 
-Copyright 2008 by Chisel Wright
+Copyright 2008-2009 by Chisel Wright
 
 This program is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.

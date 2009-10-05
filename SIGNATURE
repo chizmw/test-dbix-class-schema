@@ -15,12 +15,12 @@ not run its Makefile.PL or Build.PL.
 Hash: SHA1
 
 SHA1 dcf8653259892f594ee0d0928d282368bdf4952a Build.PL
-SHA1 f7d58d8ec06dd3da90f9d636b1d0dcd03d5c6699 Changes
+SHA1 25d54d3a8b7430f7779c524be3b9cbb522ba54f3 Changes
 SHA1 9059b13cb7877d1bf6be52d417305536baf53882 MANIFEST
-SHA1 75af48459031fc112df43425eebe044d9628d262 MANIFEST.SKIP
+SHA1 f0cdd51f43009d077cb059cc358d2109dcd64205 MANIFEST.SKIP
 SHA1 f451056b30622b51e2199432a637b91a60892130 META.yml
 SHA1 235a4ed7f5bd098a4f35ca9f54ec88f3a4d3ac9f Makefile.PL
-SHA1 e4b85ce287fdbf4bcbfe59d7bc3c99491b3d0ce4 README
+SHA1 4da3eac90c00c083b27385e5779aba213342a7e8 README
 SHA1 603bb9de29fb8cba7f13409c546750972eff645d inc/Module/AutoInstall.pm
 SHA1 7e2cfa1b9efe0d502ee57717649c90ba4bd28ba9 inc/Module/Install.pm
 SHA1 182a0df45b65151afdc2be0b7246a2d02d0f0567 inc/Module/Install/AutoInstall.pm
@@ -33,10 +33,10 @@ SHA1 54fcbed19232ec959bb17cfb4410599afc7f0779 inc/Module/Install/Makefile.pm
 SHA1 7d3be9b158e37b2b2c22084740099955623b1d56 inc/Module/Install/Metadata.pm
 SHA1 0a8b66180229ba2f9deaea1fedd0aacf7a7ace6b inc/Module/Install/Win32.pm
 SHA1 d3352eb33fe43a5f3ead513f645224fe34d73bc9 inc/Module/Install/WriteAll.pm
-SHA1 9015b6c3a04dadb45f273cb051cd9e184d25009d lib/Test/DBIx/Class/Schema.pm
+SHA1 5c265ac0aa598abbf6b88fa390673ce3c895008a lib/Test/DBIx/Class/Schema.pm
 SHA1 820501b5591b35b12062ab4aed104d221530356e t/10.test.dbix.class.schema.t
 SHA1 afaebcfd027ba7e601fe39f41f90c1593927ec1a t/11.testdata.t
-SHA1 37845aff5860aeda63258a011a99db40d0362470 t/12.run_tests.t
+SHA1 f22c993dd08332453744500dd859f22ce55b92dc t/12.run_tests.t
 SHA1 0665858c233a196017490c1e00da4add3f06e2bb t/lib/TDCSTest.pm
 SHA1 a0de109da936ae8917564b06a5b749c31317dd0c t/lib/TDCSTest/Schema.pm
 SHA1 831929de86898cc63c1b4e788ad1bb5526025bae t/lib/TDCSTest/Schema/Artist.pm
@@ -47,7 +47,7 @@ SHA1 a4a58ff41a26a446d525d6aa86073d23cca5705b t/var/DBIxClass.db
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.9 (GNU/Linux)
 
-iEYEARECAAYFAkrEjIkACgkQh4j7xTiFuxF24QCfboE5wIcRsA1VCxKeOhmPrmVj
-x6MAnjlJATozPwZDiN+KJu+LqAzVB1ix
-=eMIF
+iEYEARECAAYFAkrKDbUACgkQXj+g3xqylMFPcwCcCKXbn//r9g65Bo2p2tlfr3ph
+SK0AoI95d+jkIA4rQRxsPLSWVg1ygL13
+=dtE1
 -----END PGP SIGNATURE-----

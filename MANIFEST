@@ -28,4 +28,3 @@ t/lib/TDCSTest/Schema.pm
 t/lib/TDCSTest/Schema/Artist.pm
 t/lib/TDCSTest/Schema/CD.pm
 t/lib/TDCSTest/Schema/Track.pm
-t/var/DBIxClass.db

@@ -48,5 +48,3 @@ $schematest->methods(
 
 # run the tests
 $schematest->run_tests();
-
-done_testing;

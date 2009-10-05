@@ -14,3 +14,4 @@ tmp$
 \.bak$
 .*\.sqlite3
 ^\.git
+t/var/DBIxClass.db
