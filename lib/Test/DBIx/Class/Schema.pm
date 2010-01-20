@@ -6,7 +6,7 @@ use warnings;
 # Always remember to do all digits for the version even if they're 0
 # i.e. first release of 0.XX *must* be 0.XX000. This avoids fBSD ports
 # brain damage and presumably various other packaging systems too
-our $VERSION = '0.01006';
+our $VERSION = '0.01007';
 
 # ensure we have "done_testing"
 use Test::More 0.92;
@@ -64,7 +64,17 @@ sub run_tests {
             if (not defined $record);
 
         # run tests on real records
-        isa_ok($record, $self->{namespace} . '::' . $self->{moniker});
+        if (defined $self->{glue}) {
+            isa_ok(
+                $record,
+                  $self->{namespace}
+                . '::' . $self->{glue}
+                . '::' . $self->{moniker}
+            );
+        }
+        else {
+            isa_ok($record, $self->{namespace} . '::' . $self->{moniker});
+        }
         eval {
             $schema->txn_do(
                 sub {
