@@ -6,7 +6,7 @@ use warnings;
 # Always remember to do all digits for the version even if they're 0
 # i.e. first release of 0.XX *must* be 0.XX000. This avoids fBSD ports
 # brain damage and presumably various other packaging systems too
-our $VERSION = '0.01007';
+our $VERSION = '0.01008';
 
 # ensure we have "done_testing"
 use Test::More 0.92;
@@ -56,7 +56,12 @@ sub run_tests {
     $self->_test_resultset_methods($rs);
 
     # get an object to test methods against
-    $record = $schema->resultset( $self->{moniker} )->search({})->first();
+    #   changed from ->first() to ->slice()->single() at dakkar's reqest
+    #   he say's it's faster
+    $record = $schema->resultset( $self->{moniker} )
+                ->search({})
+                ->slice(0,0)
+                ->single();
 
     # no actual records - don't test against nothingness
     SKIP: {
@@ -279,11 +284,15 @@ L<Test::Aggregate>
 
 =head1 AUTHOR
 
-Chisel Wright C<< <chiselwright@users.berlios.de> >>
+Chisel Wright C<< <chisel@chizography.net> >>
+
+=head1 CONTRIBUTORS
+
+Gianni Ceccarelli C<< <dakkar@thenautilus.net> >>
 
 =head1 LICENSE
 
-Copyright 2008-2009 by Chisel Wright
+Copyright 2008-2010 by Chisel Wright
 
 This program is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.
@@ -291,5 +300,3 @@ the same terms as Perl itself.
 See <http://www.perl.com/perl/misc/Artistic.html>
 
 =cut
-
-1;

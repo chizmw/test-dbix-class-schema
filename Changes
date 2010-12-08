@@ -1,5 +1,8 @@
 This file documents the revision history for Test::DBIx::Class::Schema.
 
+0.01008 Wed 8 Dec 2010 10:50:49 GMT
+    - replace first() with ->slice()->single() [speed optimisation] (dakkar)
+
 0.01007 Wed Jan 20 09:48:08 GMT 2010
     - [RT #53825] Added ->{glue} option/hack
 
