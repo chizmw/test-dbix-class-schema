@@ -1,5 +1,8 @@
 This file documents the revision history for Test::DBIx::Class::Schema.
 
+{{$NEXT}}
+  - convert to Dist::Zilla
+
 0.01008 Wed 8 Dec 2010 10:50:49 GMT
     - replace first() with ->slice()->single() [speed optimisation] (dakkar)
 
