@@ -1,6 +1,8 @@
 This file documents the revision history for Test::DBIx::Class::Schema.
 
 {{$NEXT}}
+
+0.01010   2010-12-23 15:15:37 EST5EDT
   - replace DBIx::Class::Schema dependency with DBIx::Class +version
 
 0.01009   2010-12-09 17:39:54 Europe/London
