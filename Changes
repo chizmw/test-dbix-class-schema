@@ -1,5 +1,8 @@
 This file documents the revision history for Test::DBIx::Class::Schema.
 
+{{$NEXT}}
+  - replace DBIx::Class::Schema dependency with DBIx::Class +version
+
 0.01009   2010-12-09 17:39:54 Europe/London
   - convert to Dist::Zilla
 
