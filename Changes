@@ -1,6 +1,8 @@
 This file documents the revision history for Test::DBIx::Class::Schema.
 
 {{$NEXT}}
+
+0.01011   2011-01-18 17:06:54 Europe/London
   - improve testing in many areas (darius/chisel)
     - test against tables with no data
     - handle proxy columns/relationships
