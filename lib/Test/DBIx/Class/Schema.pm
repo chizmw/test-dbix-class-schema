@@ -24,7 +24,7 @@ sub methods {
 
 sub run_tests {
     my ($self) = @_;
-    my ($schema, $record, $resultset);
+    my ($schema, $rs, $record);
 
     # make sure we can use the schema (namespace) module
     use_ok( $self->{namespace} );
@@ -45,56 +45,25 @@ sub run_tests {
 
     # create a new resultset object and perform tests on it
     # - this allows us to test ->my_column() without requiring data
-    my $rs = $schema->resultset( $self->{moniker} )->new({});
+    $rs = $schema->resultset( $self->{moniker} );
+    $record = $schema->resultset( $self->{moniker} )->new({});
+
+    # make sure our record presents itself as the correct object type
+    if (defined $self->{glue}) {
+        isa_ok(
+            $record,
+                $self->{namespace}
+            . '::' . $self->{glue}
+            . '::' . $self->{moniker}
+        );
+    }
+    else {
+        isa_ok($record, $self->{namespace} . '::' . $self->{moniker});
+    }
+
     $self->_test_normal_methods($rs);
-    $self->_test_special_methods($rs);
+    $self->_test_special_methods($record);
     $self->_test_resultset_methods($rs);
-
-    # get an object to test methods against
-    #   changed from ->first() to ->slice()->single() at dakkar's reqest
-    #   he say's it's faster
-    $record = $schema->resultset( $self->{moniker} )
-                ->search({})
-                ->slice(0,0)
-                ->single();
-
-    # no actual records - don't test against nothingness
-    SKIP: {
-        skip q{no records in the table}, 1
-            if (not defined $record);
-
-        # run tests on real records
-        if (defined $self->{glue}) {
-            isa_ok(
-                $record,
-                  $self->{namespace}
-                . '::' . $self->{glue}
-                . '::' . $self->{moniker}
-            );
-        }
-        else {
-            isa_ok($record, $self->{namespace} . '::' . $self->{moniker});
-        }
-        eval {
-            $schema->txn_do(
-                sub {
-                    # 'normal' methods; row & relation
-                    # we can try calling these as they gave no side-effects
-                    $self->_test_normal_methods($record);
-                    $self->_test_special_methods($record);
-                    $self->_test_resultset_methods($record);
-
-
-                    # rollback any evil changes that crept through from the
-                    # tested calls
-                    $schema->txn_rollback;
-                }
-            )
-        };
-        if (my $e=$@) {
-            warn $e;
-        }
-    }; # end SKIP
 
     done_testing
         unless $ENV{TEST_AGGREGATE};
@@ -102,26 +71,90 @@ sub run_tests {
 
 sub _test_normal_methods {
     my $self    = shift;
-    my $record  = shift;
+    my $rs  = shift;
 
     my @std_method_types        = qw(columns relations);
 
     # 'normal' methods; row & relation
     # we can try calling these as they gave no side-effects
+    my @proxied;
     foreach my $method_type (@std_method_types) {
         SKIP: {
             if (not @{ $self->{methods}->{$method_type} }) {
                 skip qq{no $method_type methods}, 1;
             }
 
-            can_ok(
-                $record,
-                @{ $self->{methods}->{$method_type} },
-            );
             # try calling each method
             foreach my $method ( @{ $self->{methods}->{$method_type} } ) {
-                eval { $record->$method };
-                is($@, q{}, qq{calling $method() didn't barf});
+                # make sure we can call the method
+                my $source = $rs->result_source;
+
+                # 'normal' relationship
+                if ($source->has_relationship($method)) {
+                    eval {
+                        my $related_source = $source->related_source($method);
+                    };
+                    is($@, q{}, qq{related source for '$method' OK});
+
+                    next; # skip the tests that don't apply (below)
+                }
+
+                # many_to_many and proxy
+                if ( $method_type eq 'relations' ) {
+                    $DB::single=1 if $method eq 'currency';
+                    my $result = $rs->new({});
+                    if (can_ok( $result, $method )) {
+                        my @relationships = $source->relationships;
+                        my $is_proxied;
+                        for my $relationship ( @relationships ) {
+                            my $proxy =
+                                $source->relationship_info($relationship)->{attrs}{proxy};
+                            # If the relationship is proxied then we assume it
+                            # works if we can call it, and it should be tested
+                            # in the related result source
+                            next if not $proxy;
+                            $is_proxied = 1;
+                            pass qq{'$method' relationship exists via proxied relationship '$relationship'};
+                            last;
+                        }
+                        # many_to_many
+                        isa_ok( $result->$method, 'DBIx::Class::ResultSet')
+                            if not $is_proxied;
+                    }
+                }
+
+                # column accessor
+                elsif ( $method_type eq 'columns' ) {
+                    if ( $source->has_column($method) ) {
+                        pass qq{'$method' column defined in result_source};
+                        eval {
+                            my $col = $rs->get_column($method)->all;
+                        };
+                        is($@, q{}, qq{'$method' column exists in database});
+                    }
+                    else {
+                        my @relationships = $source->relationships;
+                        for my $relationship ( @relationships ) {
+                            my $proxy =
+                                $source->relationship_info($relationship)->{attrs}{proxy};
+                            next if not $proxy;
+                            if ( grep m{$method}, @$proxy ) {
+                                eval { $rs->new({})->$method; };
+                                is($@, q{}, qq{'$method' column exists via proxied relationship '$relationship'});
+                            }
+                            else {
+                                fail qq{'$method' column does not exist and is not proxied};
+                            }
+                            last;
+                        }
+                    }
+                    #ok($source->has_column($method), qq{$method: column defined in result_source});
+                }
+
+                # ... erm ... what's this?
+                else {
+                    die qq{unknown method type: $method_type};
+                }
             }
         }
     } # foreach
@@ -129,47 +162,35 @@ sub _test_normal_methods {
 }
 
 sub _test_special_methods {
-    my $self    = shift;
-    my $record  = shift;
+    shift->_test_methods(shift, [qw/custom/]);
+}
 
-    my @special_method_types    = qw(custom);
+sub _test_resultset_methods {
+    shift->_test_methods(shift, [qw/resultsets/]);
+}
+
+sub _test_methods {
+    my $self            = shift;
+    my $thingy          = shift;
+    my $method_types    = shift;
 
     # 'special' methods; custom
     # we can't call these as they may have unknown parameters,
     # side effects, etc
-    foreach my $method_type (@special_method_types) {
+    foreach my $method_type (@{ $method_types} ) {
         SKIP: {
-            if (not @{ $self->{methods}->{$method_type} }) {
-                skip qq{no $method_type methods}, 1;
-            }
-
-            can_ok(
-                $record,
-                @{ $self->{methods}->{$method_type} },
+            skip qq{no $method_type methods}, 1
+                    unless @{ $self->{methods}{$method_type} };
+            ok(
+                @{ $self->{methods}{$method_type} },
+                qq{$method_type list found for testing}
             );
         }
-    } # foreach
-    return;
-}
 
-sub _test_resultset_methods {
-    my $self        = shift;
-    my $schema      = shift->result_source->schema;
-    my $resultset   = $schema->resultset( $self->{moniker} );
-
-    my @resultset_method_types  = qw(resultsets);
-
-    # resultset class methods - we need something slightly different here
-    foreach my $method_type (@resultset_method_types) {
-        SKIP: {
-            skip qq{no resultsets methods}, 1
-                unless @{ $self->{methods}->{resultsets} };
-
-            can_ok(
-                $resultset,
-                @{ $self->{methods}->{resultsets} },
-            );
-        } # SKIP, no resultsets
+        # call can on each method to make it obvious what's being tested
+        foreach my $method (@{ $self->{methods}{$method_type} } ) {
+            can_ok( $thingy, $method );
+        }
     } # foreach
     return;
 }
