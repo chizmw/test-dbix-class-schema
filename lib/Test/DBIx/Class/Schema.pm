@@ -304,11 +304,12 @@ Chisel Wright C<< <chisel@chizography.net> >>
 
 =head1 CONTRIBUTORS
 
-Gianni Ceccarelli C<< <dakkar@thenautilus.net> >>
+Gianni Ceccarelli C<< <dakkar@thenautilus.net> >>,
+Darius Jokilehto
 
 =head1 LICENSE
 
-Copyright 2008-2010 by Chisel Wright
+Copyright 2008-2011 by Chisel Wright
 
 This program is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.

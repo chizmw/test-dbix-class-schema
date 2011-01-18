@@ -1,6 +1,10 @@
 This file documents the revision history for Test::DBIx::Class::Schema.
 
 {{$NEXT}}
+  - improve testing in many areas (darius/chisel)
+    - test against tables with no data
+    - handle proxy columns/relationships
+    - deal with many_to_many
 
 0.01010   2010-12-23 15:15:37 EST5EDT
   - replace DBIx::Class::Schema dependency with DBIx::Class +version
