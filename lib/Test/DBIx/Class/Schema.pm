@@ -128,7 +128,8 @@ sub _test_normal_methods {
                     if ( $source->has_column($method) ) {
                         pass qq{'$method' column defined in result_source};
                         eval {
-                            my $col = $rs->get_column($method)->all;
+                            # https://rt.cpan.org/Ticket/Display.html?id=65521
+                            my $col = $rs->slice(0,0)->get_column($method)->all;
                         };
                         is($@, q{}, qq{'$method' column exists in database});
                     }
