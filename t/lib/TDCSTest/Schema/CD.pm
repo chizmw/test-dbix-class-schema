@@ -8,7 +8,7 @@ __PACKAGE__->table('cd');
 __PACKAGE__->add_columns(
     qw<
         cdid
-        artist
+        artistid
         title
         year
     >
@@ -16,7 +16,7 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key('cdid');
 
-__PACKAGE__->belongs_to( artist => 'TDCSTest::Schema::Artist' );
+__PACKAGE__->belongs_to( artist => 'TDCSTest::Schema::Artist', 'artistid' );
 
 
 1;

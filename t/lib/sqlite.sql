@@ -7,14 +7,14 @@ CREATE TABLE artist (
 
 CREATE TABLE cd (
   cdid INTEGER PRIMARY KEY NOT NULL,
-  artist integer NOT NULL,
+  artistid integer NOT NULL,
   title varchar(100) NOT NULL,
   year varchar(100) NOT NULL
 );
 
 CREATE TABLE track (
   trackid INTEGER PRIMARY KEY NOT NULL,
-  cd integer NOT NULL,
+  cdid integer NOT NULL,
   position integer NOT NULL,
   title varchar(100) NOT NULL,
   last_updated_on datetime NULL

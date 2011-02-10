@@ -78,6 +78,7 @@ sub populate_schema {
             [ 1, 'Perlfish' ],
             [ 2, 'Fall Out Code' ],
             [ 3, 'Inside Outers' ],
+            [ 4, 'Chisel' ],
         ],
     );
 
@@ -85,11 +86,24 @@ sub populate_schema {
     $schema->populate(
         'CD',
         [
-            [ qw/cdid artist title year/ ],
+            [ qw/cdid artistid title year/ ],
 
             [ 1, 1, 'Something Smells Odd', 1999 ],
             [ 2, 1, 'Always Strict', 2001 ],
             [ 3, 2, 'Refactored Again', 2002 ],
+            [ 4, 4, 'Tocata in Chisel', 2011 ],
+        ],
+    );
+
+    # let's have some Tracks
+    $schema->populate(
+        'Track',
+        [
+            [ qw/trackid cdid title position/ ],
+
+            [ 1, 4, 'Chisel Suite (part 1)', 1 ],
+            [ 2, 4, 'Chisel Suite (part 2)', 2 ],
+            [ 3, 4, 'Chisel Suite (part 3)', 3 ],
         ],
     );
 }
