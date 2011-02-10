@@ -101,7 +101,6 @@ sub _test_normal_methods {
 
                 # many_to_many and proxy
                 if ( $method_type eq 'relations' ) {
-                    $DB::single=1 if $method eq 'currency';
                     my $result = $rs->new({});
                     if (can_ok( $result, $method )) {
                         my @relationships = $source->relationships;
