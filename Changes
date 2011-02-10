@@ -1,6 +1,9 @@
 This file documents the revision history for Test::DBIx::Class::Schema.
 
 {{$NEXT}}
+ - Add tests for incorrect foreign/self keys in rels
+ - Fix test for missing column(s)
+ - Extend test suite
 
 0.01012   2011-02-07 13:45:19 Europe/London
  - [RT#65521] don't OOM with very large tables
