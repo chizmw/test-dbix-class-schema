@@ -137,8 +137,7 @@ sub _test_normal_methods {
                         for my $relationship ( @relationships ) {
                             my $proxy =
                                 $source->relationship_info($relationship)->{attrs}{proxy};
-                            next if not $proxy;
-                            if ( grep m{$method}, @$proxy ) {
+                            if ( $proxy and grep m{$method}, @$proxy ) {
                                 eval { $rs->new({})->$method; };
                                 is($@, q{}, qq{'$method' column exists via proxied relationship '$relationship'});
                             }
