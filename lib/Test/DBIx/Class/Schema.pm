@@ -88,13 +88,29 @@ sub _test_normal_methods {
             foreach my $method ( @{ $self->{methods}->{$method_type} } ) {
                 # make sure we can call the method
                 my $source = $rs->result_source;
+                my $related_source;
 
                 # 'normal' relationship
                 if ($source->has_relationship($method)) {
                     eval {
-                        my $related_source = $source->related_source($method);
+                        $related_source = $source->related_source($method);
                     };
-                    is($@, q{}, qq{related source for '$method' OK});
+                    is($@, q{}, qq{related source for '$method' exists});
+
+                    # test self.* and foreign.* columns are valid
+                    my $cond = $source->relationship_info($method)->{cond};
+                    foreach my $foreign_col (keys %{$cond} ) {
+                        my $self_col = $cond->{$foreign_col};
+                        s{^\w+\.}{} foreach ( $self_col, $foreign_col );
+                        eval {
+                            $source->resultset->slice(0,0)->get_column($self_col)->all;
+                        };
+                        is($@, q{}, qq{self.$self_col valid for '$method' relationship});
+                        eval {
+                            $related_source->resultset->slice(0,0)->get_column($foreign_col)->all;
+                        };
+                        is($@, q{}, qq{foreign.$foreign_col valid for '$method' relationship});
+                    }
 
                     next; # skip the tests that don't apply (below)
                 }
