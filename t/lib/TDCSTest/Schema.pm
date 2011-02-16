@@ -8,6 +8,10 @@ __PACKAGE__->load_classes(
         Artist
         CD
         Track
+        Shop
+        Audiophile
+        CDShop
+        CDShopAudiophile
     >,
 );
 

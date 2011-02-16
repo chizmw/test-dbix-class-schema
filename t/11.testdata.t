@@ -11,7 +11,7 @@ use lib qw(t/lib);
 use TDCSTest;
 
 # evil globals
-my ($schema, $artist, $cd, $track);
+my ($schema, $artist, $cd, $track, $shop, $audiophile);
 
 $schema = TDCSTest->init_schema();
 
@@ -89,5 +89,20 @@ is($track->position, 3,
     q{Track position is 3});
 is($track->cd->title, q{Tocata in Chisel},
     q{Track CD is Tocata in Chisel});
+
+$shop = $schema->resultset('Shop')->find(1);
+is($shop->name, q{Potify}, q{Shop name is 'Potify'});
+
+$shop = $schema->resultset('Shop')->find(2);
+is($shop->name, q{iTunez}, q{Shop name is 'iTunez'});
+
+$shop = $schema->resultset('Shop')->find(3);
+is($shop->name, q{Media Mangler}, q{Shop name is 'Media Mangler'});
+
+$audiophile = $schema->resultset('Audiophile')->find(1);
+is($audiophile->name, q{Chisel}, q{Audiophile name is 'Chisel'});
+
+$audiophile = $schema->resultset('Audiophile')->find(2);
+is($audiophile->name, q{Darius}, q{Audiophile name is 'Darius'});
 
 done_testing;

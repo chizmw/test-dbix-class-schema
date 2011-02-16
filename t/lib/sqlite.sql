@@ -19,3 +19,26 @@ CREATE TABLE track (
   title varchar(100) NOT NULL,
   last_updated_on datetime NULL
 );
+
+CREATE TABLE shop (
+  shopid INTEGER PRIMARY KEY NOT NULL,
+  name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE cd_shop (
+  cdid INTEGER NOT NULL,
+  shopid INTEGER NOT NULL,
+  PRIMARY KEY ( cdid, shopid )
+);
+
+CREATE TABLE audiophile (
+  audiophileid INTEGER PRIMARY KEY NOT NULL,
+  name VARCHAR(100)
+);
+
+CREATE TABLE cdshop_audiophile (
+  cdid INTEGER NOT NULL,
+  shopid INTEGER NOT NULL,
+  audiophileid INTEGER NOT NULL,
+  PRIMARY KEY ( cdid, shopid, audiophileid )
+);

@@ -106,6 +106,27 @@ sub populate_schema {
             [ 3, 4, 'Chisel Suite (part 3)', 3 ],
         ],
     );
+
+    $schema->populate(
+        'Shop',
+        [
+            [ qw/shopid name/ ],
+
+            [ 1, 'Potify' ],
+            [ 2, 'iTunez' ],
+            [ 3, 'Media Mangler' ],
+        ],
+    );
+
+    $schema->populate(
+        'Audiophile',
+        [
+            [ qw/audiophileid name/ ],
+
+            [ 1, 'Chisel' ],
+            [ 2, 'Darius' ],
+        ],
+    );
 }
 
 1;
