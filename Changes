@@ -1,17 +1,18 @@
 This file documents the revision history for Test::DBIx::Class::Schema.
 
 {{$NEXT}}
+ - Compound foreign key fix (dariusj)
 
 0.01013   2011-02-10 15:01:35 Europe/London
- - Add tests for incorrect foreign/self keys in rels
- - Fix test for missing column(s)
- - Extend test suite
+ - Add tests for incorrect foreign/self keys in rels (dariusj)
+ - Fix test for missing column(s) (dariusj)
+ - Extend test suite (chisel)
 
 0.01012   2011-02-07 13:45:19 Europe/London
- - [RT#65521] don't OOM with very large tables
+ - [RT#65521] don't OOM with very large tables (dariusj)
 
 0.01011   2011-01-18 17:06:54 Europe/London
-  - improve testing in many areas (darius/chisel)
+  - improve testing in many areas (dariusj/chisel)
     - test against tables with no data
     - handle proxy columns/relationships
     - deal with many_to_many
