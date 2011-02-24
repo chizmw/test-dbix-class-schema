@@ -8,15 +8,27 @@ __PACKAGE__->table('audiophile');
 __PACKAGE__->add_columns(
     qw<
         personid
+        shopid
     >
 );
 
 __PACKAGE__->set_primary_key('personid');
 
-__PACKAGE__->belongs_to(
-    person => 'Person',
+__PACKAGE__->has_many(
+    cdshop_audiophiles => 'TDCSTest::Schema::CDShopAudiophile',
     { 'foreign.personid' => 'self.personid' },
-    { proxy => [qw/name cdshop_audiophiles/] },
+);
+
+__PACKAGE__->belongs_to(
+    person => 'TDCSTest::Schema::Person',
+    { 'foreign.personid' => 'self.personid' },
+    { proxy => [qw/first_name cdshop_audiophiles/] },
+);
+
+__PACKAGE__->belongs_to(
+    works_at => 'TDCSTest::Schema::Shop',
+    { 'foreign.shopid' => 'self.shopid' },
+    { proxy => [qw/employee_count name/] },
 );
 
 1;

@@ -30,8 +30,10 @@ $schematest->methods({
         name
     )],
 
-    relations => [
-    ],
+    relations => [qw(
+        person
+        cds
+    )],
 
     custom => [
     ],

@@ -2,6 +2,7 @@
 
 CREATE TABLE artist (
   artistid INTEGER PRIMARY KEY NOT NULL,
+  personid INTEGER NOT NULL,
   name varchar(100)
 );
 
@@ -22,6 +23,7 @@ CREATE TABLE track (
 
 CREATE TABLE shop (
   shopid INTEGER PRIMARY KEY NOT NULL,
+  employee_count INTEGER NOT NULL DEFAULT 1,
   name VARCHAR(100) NOT NULL
 );
 
@@ -33,7 +35,8 @@ CREATE TABLE cd_shop (
 
 -- this is just to test proxying in DBIC
 CREATE TABLE audiophile (
-  personid INTEGER PRIMARY KEY NOT NULL
+  personid INTEGER PRIMARY KEY NOT NULL,
+  shopid INTEGER
 );
 
 CREATE TABLE cdshop_audiophile (
@@ -45,5 +48,5 @@ CREATE TABLE cdshop_audiophile (
 
 CREATE TABLE person (
   personid INTEGER PRIMARY KEY NOT NULL,
-  name VARCHAR(100)
+  first_name VARCHAR(100)
 );
