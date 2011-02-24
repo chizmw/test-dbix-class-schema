@@ -34,6 +34,7 @@ $schematest->methods({
     relations => [qw(
         person
         cdshop_audiophiles
+        cds
     )],
 
     custom => [

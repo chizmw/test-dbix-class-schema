@@ -31,4 +31,6 @@ __PACKAGE__->belongs_to(
     { proxy => [qw/employee_count name/] },
 );
 
+__PACKAGE__->many_to_many( 'cds', cdshop_audiophiles => 'cd' );
+
 1;
