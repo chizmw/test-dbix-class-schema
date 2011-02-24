@@ -11,7 +11,7 @@ use lib qw(t/lib);
 use TDCSTest;
 
 # evil globals
-my ($schema, $artist, $cd, $track, $shop, $audiophile);
+my ($schema, $artist, $cd, $track, $shop, $audiophile, $person);
 
 $schema = TDCSTest->init_schema();
 
@@ -99,10 +99,16 @@ is($shop->name, q{iTunez}, q{Shop name is 'iTunez'});
 $shop = $schema->resultset('Shop')->find(3);
 is($shop->name, q{Media Mangler}, q{Shop name is 'Media Mangler'});
 
+$person = $schema->resultset('Person')->find(1);
+is($person->name, q{Chisel}, q{Person name is 'Chisel'});
+
+$person = $schema->resultset('Person')->find(2);
+is($person->name, q{Darius}, q{Person name is 'Darius'});
+
 $audiophile = $schema->resultset('Audiophile')->find(1);
-is($audiophile->name, q{Chisel}, q{Audiophile name is 'Chisel'});
+is($audiophile->name, q{Chisel}, q{Audiophile name (proxied) is 'Chisel'});
 
 $audiophile = $schema->resultset('Audiophile')->find(2);
-is($audiophile->name, q{Darius}, q{Audiophile name is 'Darius'});
+is($audiophile->name, q{Darius}, q{Audiophile name (proxied) is 'Darius'});
 
 done_testing;

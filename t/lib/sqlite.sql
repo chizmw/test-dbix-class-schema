@@ -31,14 +31,19 @@ CREATE TABLE cd_shop (
   PRIMARY KEY ( cdid, shopid )
 );
 
+-- this is just to test proxying in DBIC
 CREATE TABLE audiophile (
-  audiophileid INTEGER PRIMARY KEY NOT NULL,
-  name VARCHAR(100)
+  personid INTEGER PRIMARY KEY NOT NULL
 );
 
 CREATE TABLE cdshop_audiophile (
   cdid INTEGER NOT NULL,
   shopid INTEGER NOT NULL,
-  audiophileid INTEGER NOT NULL,
-  PRIMARY KEY ( cdid, shopid, audiophileid )
+  personid INTEGER NOT NULL,
+  PRIMARY KEY ( cdid, shopid, personid )
+);
+
+CREATE TABLE person (
+  personid INTEGER PRIMARY KEY NOT NULL,
+  name VARCHAR(100)
 );

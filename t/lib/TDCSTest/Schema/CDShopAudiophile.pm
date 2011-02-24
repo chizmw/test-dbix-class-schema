@@ -9,11 +9,11 @@ __PACKAGE__->add_columns(
     qw<
         cdid
         shopid
-        audiophileid
+        personid
     >
 );
 
-__PACKAGE__->set_primary_key(qw/cdid shopid audiophileid/);
+__PACKAGE__->set_primary_key(qw/cdid shopid personid/);
 
 __PACKAGE__->belongs_to(
     cd => 'TDCSTest::Schema::CD',
@@ -35,7 +35,12 @@ __PACKAGE__->belongs_to(
 
 __PACKAGE__->belongs_to(
     audiophile => 'TDCSTest::Schema::Audiophile',
-    { 'foreign.audiophileid' => 'self.audiophileid' }
+    { 'foreign.personid' => 'self.personid' }
+);
+
+__PACKAGE__->belongs_to(
+    person => 'TDCSTest::Schema::Person',
+    { 'foreign.personid' => 'self.personid' }
 );
 
 1;
