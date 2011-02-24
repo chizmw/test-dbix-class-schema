@@ -31,7 +31,6 @@ $schematest->methods({
     )],
 
     relations => [qw(
-        cdshop_audiophiles
         audiophile
         artists
     )],

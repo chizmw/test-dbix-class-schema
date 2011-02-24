@@ -26,6 +26,8 @@ my $schematest = Test::DBIx::Class::Schema->new({
 $schematest->methods({
     columns => [qw(
         personid
+        first_name
+        employee_count
         name
     )],
 

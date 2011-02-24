@@ -22,7 +22,7 @@ __PACKAGE__->has_many(
 __PACKAGE__->belongs_to(
     person => 'TDCSTest::Schema::Person',
     { 'foreign.personid' => 'self.personid' },
-    { proxy => [qw/first_name cdshop_audiophiles/] },
+    { proxy => [qw/first_name/] },
 );
 
 __PACKAGE__->belongs_to(

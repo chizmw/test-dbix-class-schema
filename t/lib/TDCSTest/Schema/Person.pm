@@ -14,11 +14,6 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key('personid');
 
-__PACKAGE__->has_many(
-    cdshop_audiophiles => 'TDCSTest::Schema::CDShopAudiophile',
-    { 'foreign.personid' => 'self.personid' },
-);
-
 __PACKAGE__->might_have(
     audiophile => 'TDCSTest::Schema::Audiophile',
     { 'foreign.personid' => 'self.personid' },
