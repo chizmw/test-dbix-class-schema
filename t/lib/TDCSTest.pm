@@ -119,12 +119,21 @@ sub populate_schema {
     );
 
     $schema->populate(
-        'Audiophile',
+        'Person',
         [
-            [ qw/audiophileid name/ ],
+            [ qw/personid name/ ],
 
             [ 1, 'Chisel' ],
             [ 2, 'Darius' ],
+        ],
+    );
+    $schema->populate(
+        'Audiophile',
+        [
+            [ qw/personid/ ],
+
+            [ 1 ],
+            [ 2 ],
         ],
     );
 }

@@ -12,6 +12,7 @@ $schema = TDCSTest->init_schema();
 
 ok(defined $schema, q{schema object defined});
 
+
 use Test::DBIx::Class::Schema;
 
 # create a new test object
@@ -19,23 +20,18 @@ my $schematest = Test::DBIx::Class::Schema->new({
     # required
     schema    => $schema,
     namespace => 'TDCSTest::Schema',
-    moniker   => 'CDShopAudiophile',
+    moniker   => 'Person',
 });
 
 # tell it what to test
 $schematest->methods({
     columns => [qw(
-        cdid
-        shopid
         personid
+        name
     )],
 
     relations => [qw(
-        cd
-        shop
-        cdshop
-        audiophile
-        person
+        cdshop_audiophiles
     )],
 
     custom => [
