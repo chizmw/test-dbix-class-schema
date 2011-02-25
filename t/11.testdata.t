@@ -20,18 +20,26 @@ ok(defined $schema, q{schema object defined});
 $artist = $schema->resultset('Artist')->find(1);
 is($artist->name, q{Perlfish},
     q{Artist name is Perlfish});
+is($artist->person->first_name, q{Chisel},
+    q{Artist's person name is Chisel});
 
 $artist = $schema->resultset('Artist')->find(2);
 is($artist->name, q{Fall Out Code},
     q{Artist name is Fall Out Code});
+is($artist->person->first_name, q{Chisel},
+    q{Artist's person name is Chisel});
 
 $artist = $schema->resultset('Artist')->find(3);
 is($artist->name, q{Inside Outers},
     q{Artist name is Inside Outers});
+is($artist->person->first_name, q{Chisel},
+    q{Artist's person name is Chisel});
 
 $artist = $schema->resultset('Artist')->find(4);
 is($artist->name, q{Chisel},
     q{Artist name is Chisel});
+is($artist->person->first_name, q{Chisel},
+    q{Artist's person name is Chisel});
 
 $cd = $schema->resultset('CD')->find(1);
 is($cd->title, q{Something Smells Odd},
@@ -100,15 +108,15 @@ $shop = $schema->resultset('Shop')->find(3);
 is($shop->name, q{Media Mangler}, q{Shop name is 'Media Mangler'});
 
 $person = $schema->resultset('Person')->find(1);
-is($person->name, q{Chisel}, q{Person name is 'Chisel'});
+is($person->first_name, q{Chisel}, q{Person first_name is 'Chisel'});
 
 $person = $schema->resultset('Person')->find(2);
-is($person->name, q{Darius}, q{Person name is 'Darius'});
+is($person->first_name, q{Darius}, q{Person first_name is 'Darius'});
 
 $audiophile = $schema->resultset('Audiophile')->find(1);
-is($audiophile->name, q{Chisel}, q{Audiophile name (proxied) is 'Chisel'});
+is($audiophile->first_name, q{Chisel}, q{Audiophile first_name (proxied) is 'Chisel'});
 
 $audiophile = $schema->resultset('Audiophile')->find(2);
-is($audiophile->name, q{Darius}, q{Audiophile name (proxied) is 'Darius'});
+is($audiophile->first_name, q{Darius}, q{Audiophile first_name (proxied) is 'Darius'});
 
 done_testing;

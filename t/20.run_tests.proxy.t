@@ -26,12 +26,15 @@ my $schematest = Test::DBIx::Class::Schema->new({
 $schematest->methods({
     columns => [qw(
         personid
+        first_name
+        employee_count
         name
     )],
 
     relations => [qw(
         person
         cdshop_audiophiles
+        cds
     )],
 
     custom => [

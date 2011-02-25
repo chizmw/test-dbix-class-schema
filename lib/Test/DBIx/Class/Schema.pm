@@ -80,12 +80,12 @@ sub _test_normal_methods {
     my @proxied;
     foreach my $method_type (@std_method_types) {
         SKIP: {
-            if (not @{ $self->{methods}->{$method_type} }) {
+            if (not @{ $self->{methods}{$method_type} }) {
                 skip qq{no $method_type methods}, 1;
             }
 
             # try calling each method
-            foreach my $method ( @{ $self->{methods}->{$method_type} } ) {
+            METHOD: foreach my $method ( @{ $self->{methods}{$method_type} } ) {
                 # make sure we can call the method
                 my $source = $rs->result_source;
                 my $related_source;
@@ -114,29 +114,29 @@ sub _test_normal_methods {
                             is($@, q{}, qq{foreign.$foreign_col valid for '$method' relationship});
                         }
                     }
-                    next; # skip the tests that don't apply (below)
                 }
 
                 # many_to_many and proxy
-                if ( $method_type eq 'relations' ) {
-                    my $result = $rs->new({});
-                    if (can_ok( $result, $method )) {
-                        my @relationships = $source->relationships;
-                        my $is_proxied;
-                        for my $relationship ( @relationships ) {
-                            my $proxy =
-                                $source->relationship_info($relationship)->{attrs}{proxy};
-                            # If the relationship is proxied then we assume it
-                            # works if we can call it, and it should be tested
-                            # in the related result source
-                            next if not $proxy;
-                            $is_proxied = 1;
+                elsif ( $method_type eq 'relations' ) {
+                    # TODO: Factor this out with the same code under proxied
+                    # 'columns' accessors
+                    RELATIONSHIP:
+                    for my $relationship ( $source->relationships ) {
+                        my $proxy = $source->relationship_info($relationship)->{attrs}{proxy};
+                        next RELATIONSHIP if not $proxy;
+                        if ( grep m{$method}, @$proxy ) {
                             pass qq{'$method' relationship exists via proxied relationship '$relationship'};
-                            last;
+                            next METHOD;
                         }
-                        # many_to_many
-                        isa_ok( $result->$method, 'DBIx::Class::ResultSet')
-                            if not $is_proxied;
+                    }
+                    my $result = $rs->new({});
+                    # many_to_many
+                    if ( $result->can($method)
+                     and $result->$method->isa('DBIx::Class::ResultSet') ) {
+                        pass("'$method' relation is a many-to-many");
+                    }
+                    else {
+                        fail("'$method' is not a valid relationship" );
                     }
                 }
 
@@ -149,25 +149,20 @@ sub _test_normal_methods {
                             my $col = $rs->slice(0,0)->get_column($method)->all;
                         };
                         is($@, q{}, qq{'$method' column exists in database});
+                        next METHOD;
                     }
-                    else {
-                        my @relationships = $source->relationships;
-                        for my $relationship ( @relationships ) {
-                            my $proxy =
-                                $source->relationship_info($relationship)->{attrs}{proxy};
-                            if ( $proxy and grep m{$method}, @$proxy ) {
-                                eval { $rs->new({})->$method; };
-                                is($@, q{}, qq{'$method' column exists via proxied relationship '$relationship'});
-                            }
-                            else {
-                                fail qq{'$method' column does not exist and is not proxied};
-                            }
-                            last;
+                    # Proxied columns
+                    RELATIONSHIP:
+                    for my $relationship ( $source->relationships ) {
+                        my $proxy = $source->relationship_info($relationship)->{attrs}{proxy};
+                        next RELATIONSHIP if not $proxy;
+                        if ( grep m{$method}, @$proxy ) {
+                            pass(qq{'$method' column exists via proxied relationship '$relationship'});
+                            next METHOD;
                         }
                     }
-                    #ok($source->has_column($method), qq{$method: column defined in result_source});
+                    fail qq{'$method' column does not exist and is not proxied};
                 }
-
                 # ... erm ... what's this?
                 else {
                     die qq{unknown method type: $method_type};
