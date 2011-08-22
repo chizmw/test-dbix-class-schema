@@ -225,8 +225,14 @@ sub _test_unexpected_normal_methods {
             $set->{$method_type},
         );
 
-        is(scalar @diff, 0, "All $method_type in test")
-            || diag "Not in test - ". join(',',@diff);
+        if ($self->{test_missing}) {
+            is(scalar @diff, 0, "All $method_type in test")
+                || diag "Not in test - ". join(',',@diff);
+        } else {
+            if (scalar @diff) {
+               diag "All $method_type in test - not in test - "
+                . join(',',@diff);
+        }
     }
 
 }
@@ -293,6 +299,9 @@ Create a test script that looks like this:
             # optional
             username  => 'some_user',
             password  => 'opensesame',
+            # rather than calling diag will test that all columns/relatinoships
+            # are accounted for in your test
+            test_missing => 1,
         }
     );
 
