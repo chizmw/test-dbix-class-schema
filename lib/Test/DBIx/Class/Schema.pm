@@ -65,6 +65,9 @@ sub run_tests {
     $self->_test_special_methods($record);
     $self->_test_resultset_methods($rs);
 
+    $self->_test_unexpected_normal_methods($rs);
+    # TODO: test custom, resultsets
+
     done_testing
         unless $ENV{TEST_AGGREGATE};
 }
@@ -207,6 +210,52 @@ sub _test_methods {
     return;
 }
 
+sub _test_unexpected_normal_methods {
+    my($self,$rs) = @_;
+    my $source = $rs->result_source;
+    
+    my $set = {
+        'columns' => [ $source->columns ],
+        'relations' => [ $source->relationships ],
+    };
+
+    foreach my $method_type (sort keys %{$set}) {
+        my @diff = $self->_diff_arrays(
+            $self->{methods}->{$method_type},
+            $set->{$method_type},
+        );
+
+        if ($self->{test_missing}) {
+            is(scalar @diff, 0, "All $method_type in test")
+                || diag "Not in test - ". join(',',@diff);
+        } else {
+            if (scalar @diff) {
+               diag "All $method_type in test - not in test - "
+                . join(',',@diff);
+        }
+    }
+
+}
+
+sub _diff_arrays {
+    my($self,$min,$full) = @_;
+    my @a = @{$min};
+    my @b = @{$full};
+    note "min: ". pp(\@a);
+    note "full: ". pp(\@b);
+
+    my %a = map{ $_ => 1 } @a;
+    my @diff = grep (!defined $a{$_}, @b);
+    use Data::Dump qw/pp/;
+    note "diff: ". pp(\@diff);
+
+    if (wantarray) {
+        return @diff;
+    }
+    return \@diff;
+}
+
+
 1;
 __END__
 
@@ -250,6 +299,9 @@ Create a test script that looks like this:
             # optional
             username  => 'some_user',
             password  => 'opensesame',
+            # rather than calling diag will test that all columns/relatinoships
+            # are accounted for in your test
+            test_missing => 1,
         }
     );
 
@@ -314,5 +366,6 @@ L<Test::Aggregate>
 
 Gianni Ceccarelli C<< <dakkar@thenautilus.net> >>,
 Darius Jokilehto
+Jason Tang C<< <tang.jason.ch@gmail.com> >>,
 
 =cut
