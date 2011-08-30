@@ -213,7 +213,7 @@ sub _test_methods {
 sub _test_unexpected_normal_methods {
     my($self,$rs) = @_;
     my $source = $rs->result_source;
-    
+
     my $set = {
         'columns' => [ $source->columns ],
         'relations' => [ $source->relationships ],
