@@ -64,8 +64,8 @@ sub run_tests {
     $self->_test_normal_methods($rs);
     $self->_test_special_methods($record);
     $self->_test_resultset_methods($rs);
-
     $self->_test_unexpected_normal_methods($rs);
+
     # TODO: test custom, resultsets
 
     done_testing
@@ -212,10 +212,10 @@ sub _test_methods {
 
 sub _test_unexpected_normal_methods {
     my($self,$rs) = @_;
-    my $source = $rs->result_source;
+    my $source    = $rs->result_source;
 
     my $set = {
-        'columns' => [ $source->columns ],
+        'columns'   => [ $source->columns ],
         'relations' => [ $source->relationships ],
     };
 
@@ -228,13 +228,14 @@ sub _test_unexpected_normal_methods {
         if ($self->{test_missing}) {
             is(scalar @diff, 0, "All $method_type in test")
                 || diag "Not in test - ". join(',',@diff);
-        } else {
+        }
+        else {
             if (scalar @diff) {
                diag "All $method_type in test - not in test - "
                 . join(',',@diff);
+            }
         }
     }
-
 }
 
 sub _diff_arrays {
@@ -299,7 +300,7 @@ Create a test script that looks like this:
             # optional
             username  => 'some_user',
             password  => 'opensesame',
-            # rather than calling diag will test that all columns/relatinoships
+            # rather than calling diag will test that all columns/relationships
             # are accounted for in your test
             test_missing => 1,
         }
