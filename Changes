@@ -1,6 +1,8 @@
 This file documents the revision history for Test::DBIx::Class::Schema.
 
 {{$NEXT}}
+ - Add test for unexpected columns in DB (jasontang)
+ - Switch to using dzil's Git::NextVersion
 
 0.01015   2011-02-25 13:16:02 Europe/London
  - Added test for many-to-many relationship (dariusj)
