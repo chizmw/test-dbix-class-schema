@@ -68,8 +68,9 @@ sub run_tests {
 
     # TODO: test custom, resultsets
 
+    my $tb = Test::More->builder;
     done_testing
-        unless $ENV{TEST_AGGREGATE};
+        unless ($tb->{Done_Testing} || $ENV{TEST_AGGREGATE});
 }
 
 sub _test_normal_methods {
