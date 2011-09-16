@@ -1,6 +1,8 @@
 This file documents the revision history for Test::DBIx::Class::Schema.
 
 {{$NEXT}}
+
+0.01016   2011-09-16 17:00:09 Europe/London
  - Add test for unexpected columns in DB (jasontang)
  - Switch to using dzil's Git::NextVersion
 
