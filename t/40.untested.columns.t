@@ -80,7 +80,7 @@ FORGOT_TO_TEST: {
     );
 
     test_err(
-        '# All columns in test - not in test - name',
+        '# columns not in test but defined in DBIx::Class definition - needs adding to your test - name',
     );
 
     $schematest->run_tests();
