@@ -226,12 +226,14 @@ sub _test_unexpected_normal_methods {
         );
 
         if ($self->{test_missing}) {
-            is(scalar @diff, 0, "All $method_type in test")
-                || diag "Not in test - ". join(',',@diff);
+            is(scalar @diff, 0, "All known $method_type defined in test")
+                || diag "Defined in schema class but untested - "
+                    .join(',',@diff);
         }
         else {
             if (scalar @diff) {
-               diag "All $method_type in test - not in test - "
+               diag "$method_type not in test but defined in DBIx::Class "
+                ."definition - needs adding to your test - "
                 . join(',',@diff);
             }
         }
@@ -239,16 +241,16 @@ sub _test_unexpected_normal_methods {
 }
 
 sub _diff_arrays {
-    my($self,$min,$full) = @_;
-    my @a = @{$min};
-    my @b = @{$full};
-    note "min: ". pp(\@a);
-    note "full: ". pp(\@b);
+    my($self,$tested_set,$full_set) = @_;
+    my @a = @{$tested_set};
+    my @b = @{$full_set};
+    note "tested set: ". pp(\@a);
+    note "full set: ". pp(\@b);
 
     my %a = map{ $_ => 1 } @a;
     my @diff = grep (!defined $a{$_}, @b);
     use Data::Dump qw/pp/;
-    note "diff: ". pp(\@diff);
+    note "not in test: ". pp(\@diff);
 
     if (wantarray) {
         return @diff;
@@ -301,7 +303,7 @@ Create a test script that looks like this:
             username  => 'some_user',
             password  => 'opensesame',
             # rather than calling diag will test that all columns/relationships
-            # are accounted for in your test
+            # are accounted for in your test and fail the test if not
             test_missing => 1,
         }
     );
