@@ -7,3 +7,4 @@ t/var/
 MANIFEST.bak
 Test-DBIx-Class-Schema-*.tar.gz
 Test-DBIx-Class-Schema-*/
+/.build/
