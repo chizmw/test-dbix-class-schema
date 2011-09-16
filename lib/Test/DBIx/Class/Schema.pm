@@ -58,7 +58,15 @@ sub run_tests {
         );
     }
     else {
-        isa_ok($record, $self->{namespace} . '::' . $self->{moniker});
+        # It looks like the namespace has changed with newer record objects so
+        # that they don't get ::Schema in their name.
+        # So that wew can work with either we now want our record to be the
+        # namespace+moniker with an option '::Schema' in the name.
+        # This means moving away from isa_ok() to like() on a ref()
+        my $expected_type_re = $self->{namespace} . '::' . $self->{moniker};
+           $expected_type_re =~ s{::Schema}{(?:::Schema)?};
+        my $regexp = qr{$expected_type_re};
+        like(ref($record), $regexp, "The record object is a ::$self->{moniker}");
     }
 
     $self->_test_normal_methods($rs);
@@ -68,8 +76,9 @@ sub run_tests {
 
     # TODO: test custom, resultsets
 
+    my $tb = Test::More->builder;
     done_testing
-        unless $ENV{TEST_AGGREGATE};
+        unless ($tb->{Done_Testing} || $ENV{TEST_AGGREGATE});
 }
 
 sub _test_normal_methods {
@@ -241,16 +250,12 @@ sub _test_unexpected_normal_methods {
 }
 
 sub _diff_arrays {
-    my($self,$tested_set,$full_set) = @_;
-    my @a = @{$tested_set};
-    my @b = @{$full_set};
-    note "tested set: ". pp(\@a);
-    note "full set: ". pp(\@b);
+    my($self,$min,$full) = @_;
+    my @min = @{$min};
+    my @full = @{$full};
 
-    my %a = map{ $_ => 1 } @a;
-    my @diff = grep (!defined $a{$_}, @b);
-    use Data::Dump qw/pp/;
-    note "not in test: ". pp(\@diff);
+    my %mapped = map{ $_ => 1 } @min;
+    my @diff = grep (!defined $mapped{$_}, @full);
 
     if (wantarray) {
         return @diff;
