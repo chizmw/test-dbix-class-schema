@@ -4,65 +4,23 @@ package # hide from PAUSE
 use strict;
 use warnings;
 
+use parent 'DBHelper';
+
 use TDCSTest::Schema;
 
-# lifted from DBIx::Class' DBICTest.pm
-sub _database {
-    my $self = shift;
-    my $db_file = "t/var/DBIxClass.db";
-
-    unlink($db_file) if -e $db_file;
-    unlink($db_file . "-journal") if -e $db_file . "-journal";
-    mkdir("t/var") unless -d "t/var";
-
-    my $dsn = $ENV{"DBICTEST_DSN"} || "dbi:SQLite:${db_file}";
-    my $dbuser = $ENV{"DBICTEST_DBUSER"} || '';
-    my $dbpass = $ENV{"DBICTEST_DBPASS"} || '';
-
-    my @connect_info = ($dsn, $dbuser, $dbpass, { AutoCommit => 1 });
-
-    return @connect_info;
-}
 
 # lifted from DBIx::Class' DBICTest.pm
 sub init_schema {
     my $self = shift;
     my %args = @_;
 
-    my $schema;
-
-    if ($args{compose_connection}) {
-      $schema = TDCSTest::Schema->compose_connection(
-                  'TDCSTest', $self->_database
-                );
-    } else {
-      $schema = TDCSTest::Schema->compose_namespace('TDCSTest');
-    }
-    if ( !$args{no_connect} ) {
-      $schema = $schema->connect($self->_database);
-      $schema->storage->on_connect_do(['PRAGMA synchronous = OFF']);
-    }
-    if ( !$args{no_deploy} ) {
-        __PACKAGE__->deploy_schema( $schema );
-        __PACKAGE__->populate_schema( $schema ) if( !$args{no_populate} );
-    }
-    return $schema;
-}
-
-# lifted from DBIx::Class' DBICTest.pm
-sub deploy_schema {
-    my $self = shift;
-    my $schema = shift;
-
-    if ($ENV{"DBICTEST_SQLT_DEPLOY"}) {
-        return $schema->deploy();
-    } else {
-        open IN, "t/lib/sqlite.sql";
-        my $sql;
-        { local $/ = undef; $sql = <IN>; }
-        close IN;
-        ($schema->storage->dbh->do($_) || print "Error on SQL: $_\n") for split(/;\n/, $sql);
-    }
+    return $self->_init_schema(
+        %args,
+        namespace           => __PACKAGE__,
+        schema_class        => 'TDCSTest::Schema',
+        db_file             => 't/var/DBIxClass.db',
+        sql_file            => 't/lib/sqlite.sql',
+    );
 }
 
 sub populate_schema {

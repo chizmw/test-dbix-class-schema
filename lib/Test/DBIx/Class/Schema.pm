@@ -58,7 +58,15 @@ sub run_tests {
         );
     }
     else {
-        isa_ok($record, $self->{namespace} . '::' . $self->{moniker});
+        # It looks like the namespace has changed with newer record objects so
+        # that they don't get ::Schema in their name.
+        # So that wew can work with either we now want our record to be the
+        # namespace+moniker with an option '::Schema' in the name.
+        # This means moving away from isa_ok() to like() on a ref()
+        my $expected_type_re = $self->{namespace} . '::' . $self->{moniker};
+           $expected_type_re =~ s{::Schema}{(?:::Schema)?};
+        my $regexp = qr{$expected_type_re};
+        like(ref($record), $regexp, "The record object is a ::$self->{moniker}");
     }
 
     $self->_test_normal_methods($rs);
@@ -68,8 +76,9 @@ sub run_tests {
 
     # TODO: test custom, resultsets
 
+    my $tb = Test::More->builder;
     done_testing
-        unless $ENV{TEST_AGGREGATE};
+        unless ($tb->{Done_Testing} || $ENV{TEST_AGGREGATE});
 }
 
 sub _test_normal_methods {
@@ -226,12 +235,14 @@ sub _test_unexpected_normal_methods {
         );
 
         if ($self->{test_missing}) {
-            is(scalar @diff, 0, "All $method_type in test")
-                || diag "Not in test - ". join(',',@diff);
+            is(scalar @diff, 0, "All known $method_type defined in test")
+                || diag "Defined in schema class but untested - "
+                    .join(',',@diff);
         }
         else {
             if (scalar @diff) {
-               diag "All $method_type in test - not in test - "
+               diag "$method_type not in test but defined in DBIx::Class "
+                ."definition - needs adding to your test - "
                 . join(',',@diff);
             }
         }
@@ -240,15 +251,11 @@ sub _test_unexpected_normal_methods {
 
 sub _diff_arrays {
     my($self,$min,$full) = @_;
-    my @a = @{$min};
-    my @b = @{$full};
-    note "min: ". pp(\@a);
-    note "full: ". pp(\@b);
+    my @min = @{$min};
+    my @full = @{$full};
 
-    my %a = map{ $_ => 1 } @a;
-    my @diff = grep (!defined $a{$_}, @b);
-    use Data::Dump qw/pp/;
-    note "diff: ". pp(\@diff);
+    my %mapped = map{ $_ => 1 } @min;
+    my @diff = grep (!defined $mapped{$_}, @full);
 
     if (wantarray) {
         return @diff;
@@ -301,7 +308,7 @@ Create a test script that looks like this:
             username  => 'some_user',
             password  => 'opensesame',
             # rather than calling diag will test that all columns/relationships
-            # are accounted for in your test
+            # are accounted for in your test and fail the test if not
             test_missing => 1,
         }
     );
