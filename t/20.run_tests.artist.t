@@ -27,6 +27,7 @@ my $schematest = Test::DBIx::Class::Schema->new({
 $schematest->methods({
     columns => [qw(
         artistid
+        personid
         name
     )],
 

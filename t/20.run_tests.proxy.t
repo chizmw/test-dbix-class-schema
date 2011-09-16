@@ -29,12 +29,14 @@ $schematest->methods({
         first_name
         employee_count
         name
+        shopid
     )],
 
     relations => [qw(
         person
         cdshop_audiophiles
         cds
+        works_at
     )],
 
     custom => [

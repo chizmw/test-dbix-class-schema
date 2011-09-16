@@ -28,6 +28,7 @@ $schematest->methods({
         trackid
         position
         title
+        cdid
     )],
 
     relations => [qw(
