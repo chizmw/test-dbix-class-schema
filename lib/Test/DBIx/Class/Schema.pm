@@ -376,7 +376,7 @@ L<Test::Aggregate>
 =head1 CONTRIBUTORS
 
 Gianni Ceccarelli C<< <dakkar@thenautilus.net> >>,
-Darius Jokilehto
-Jason Tang C<< <tang.jason.ch@gmail.com> >>,
+Darius Jokilehto,
+Jason Tang C<< <tang.jason.ch@gmail.com> >>
 
 =cut
