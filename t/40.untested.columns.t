@@ -80,7 +80,7 @@ FORGOT_TO_TEST: {
     );
 
     test_err(
-        '# columns not in test but defined in DBIx::Class definition - needs adding to your test - name',
+        q{# 'columns' method(s) defined in SpanishInquisition but untested: name},
     );
 
     $schematest->run_tests();
