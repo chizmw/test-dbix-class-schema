@@ -1,6 +1,8 @@
 This file documents the revision history for Test::DBIx::Class::Schema.
 
 {{$NEXT}}
+ - make Changes conform to CPAN::Changes::Spec
+   via: http://changes.cpanhq.org/author/CHISEL
 
 0.01016   2011-09-16 17:00:09 Europe/London
  - Add test for unexpected columns in DB (jasontang)
@@ -36,22 +38,22 @@ This file documents the revision history for Test::DBIx::Class::Schema.
 0.01009   2010-12-09 17:39:54 Europe/London
   - convert to Dist::Zilla
 
-0.01008 Wed 8 Dec 2010 10:50:49 GMT
+0.01008 2010-12-08 10:50 GMT
     - replace first() with ->slice()->single() [speed optimisation] (dakkar)
 
-0.01007 Wed Jan 20 09:48:08 GMT 2010
+0.01007 2010-01-20 09:48 GMT
     - [RT #53825] Added ->{glue} option/hack
 
-0.01006 Mon Oct  5 16:13:38 BST 2009
+0.01006 2009-10-05 16:13 BST
     - fixed issues that were revealed when running under Test::Aggregate
     - fixed issues that were revealed when testing with a more complicated
       schema definition
 
-0.01005 Thu Oct  1 11:58:22 BST 2009
+0.01005 2009-10-01 11:58 BST
     - added tests for $rs methods that *don't* rely on table having data
     - removed test planning in favour of "done_testing"
 
-0.01004 Tue Apr  8 11:47:33 BST 2008
+0.01004 2008-04-08 11:47 BST
     - added username/password options to new()
     - fixed test plan count
 
