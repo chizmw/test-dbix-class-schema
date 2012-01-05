@@ -3,6 +3,9 @@ This file documents the revision history for Test::DBIx::Class::Schema.
 {{$NEXT}}
  - make Changes conform to CPAN::Changes::Spec
    via: http://changes.cpanhq.org/author/CHISEL
+ - Fix bad comma(s) in contributor listing
+ - dzil process clean-up
+ - Git::NextVersion changes for x.y.z version format
 
 0.01016   2011-09-16 17:00:09 Europe/London
  - Add test for unexpected columns in DB (jasontang)
