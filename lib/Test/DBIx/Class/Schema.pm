@@ -268,13 +268,10 @@ sub _diff_arrays {
 
 
 1;
+# ABSTRACT: DBIx::Class schema sanity checking tests
 __END__
 
 =pod
-
-=head1 NAME
-
-Test::DBIx::Class::Schema - DBIx::Class schema sanity checking tests
 
 =head1 DESCRIPTION
 
