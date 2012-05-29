@@ -234,19 +234,23 @@ sub _test_unexpected_normal_methods {
             $set->{$method_type},
         );
 
+        my $plural = (scalar @diff == 1) ? '' : 's';
+        my $message =
+            qq{'$method_type' method${plural} defined in }
+            . $self->{moniker}
+            . ' but untested: '
+            . join(', ',@diff);
+
         if ($self->{test_missing}) {
-            is(scalar @diff, 0, "All known $method_type defined in test")
-                || diag "$method_type(s) defined in "
-                    . $self->{moniker}
-                    . " but untested: "
-                    . join(', ',@diff);
+            is_deeply(
+                \@diff,
+                [],
+                "All known $method_type method${plural} defined in test"
+            ) || diag $message;
         }
         else {
             if (scalar @diff) {
-               diag "$method_type(s) defined in "
-                . $self->{moniker}
-                . " but untested: "
-                . join(', ',@diff);
+               diag $message;
             }
         }
     }
