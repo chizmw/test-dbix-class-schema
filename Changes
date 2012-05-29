@@ -5,8 +5,10 @@ This file documents the revision history for Test::DBIx::Class::Schema.
    via: http://changes.cpanhq.org/author/CHISEL
  - Fix bad comma(s) in contributor listing
  - dzil process clean-up
+   - Add [PkgVersion] plugin; remove [PodVersion]
  - Git::NextVersion changes for x.y.z version format
-
+ - Tidy up missing column/relation test output
+ 
 0.01016   2011-09-16 17:00:09 Europe/London
  - Add test for unexpected columns in DB (jasontang)
  - Switch to using dzil's Git::NextVersion
