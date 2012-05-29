@@ -236,14 +236,14 @@ sub _test_unexpected_normal_methods {
 
         if ($self->{test_missing}) {
             is(scalar @diff, 0, "All known $method_type defined in test")
-                || diag "defined in "
+                || diag "$method_type(s) defined in "
                     . $self->{moniker}
                     . " but untested: "
                     . join(', ',@diff);
         }
         else {
             if (scalar @diff) {
-               diag "'$method_type' method(s) defined in "
+               diag "$method_type(s) defined in "
                 . $self->{moniker}
                 . " but untested: "
                 . join(', ',@diff);

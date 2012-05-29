@@ -80,7 +80,7 @@ FORGOT_TO_TEST: {
     );
 
     test_err(
-        q{# 'columns' method(s) defined in SpanishInquisition but untested: name},
+        q{# columns(s) defined in SpanishInquisition but untested: name},
     );
 
     $schematest->run_tests();
