@@ -1,6 +1,8 @@
 This file documents the revision history for Test::DBIx::Class::Schema.
 
 {{$NEXT}}
+
+1.0.0     2012-05-29 16:58:12 Europe/London
  - make Changes conform to CPAN::Changes::Spec
    via: http://changes.cpanhq.org/author/CHISEL
  - Fix bad comma(s) in contributor listing
