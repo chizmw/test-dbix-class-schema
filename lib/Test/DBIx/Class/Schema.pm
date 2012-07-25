@@ -112,7 +112,15 @@ sub _test_normal_methods {
                     # test self.* and foreign.* columns are valid
                     my $cond_ref = $source->relationship_info($method)->{cond};
                     $cond_ref = ref $cond_ref eq 'ARRAY' ? $cond_ref : [ $cond_ref ];
-                    foreach my $cond ( @$cond_ref ) {
+                    COND: foreach my $cond ( @$cond_ref ) {
+                        # you can have CODE as the cond_ref - that's unexpected!
+                        TODO: {
+                            if ('CODE' eq ref($cond)) {
+                                local $TODO = qq{skipping column tests for CODE defined condition};
+                                fail(qq{test '$method' with CODE definition});
+                                next COND;
+                            }
+                        }
                         foreach my $foreign_col (keys %{$cond} ) {
                             my $self_col = $cond->{$foreign_col};
                             s{^\w+\.}{} for ( $self_col, $foreign_col );
