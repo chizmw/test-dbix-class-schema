@@ -404,6 +404,7 @@ L<Test::Aggregate>
 
 Gianni Ceccarelli C<< <dakkar@thenautilus.net> >>,
 Darius Jokilehto,
-Jason Tang C<< <tang.jason.ch@gmail.com> >>
+Jason Tang C<< <tang.jason.ch@gmail.com> >>,
+Rupert Lane (L<https://github.com/rupertl>)
 
 =cut

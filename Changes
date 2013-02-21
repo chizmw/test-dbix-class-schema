@@ -1,6 +1,7 @@
 This file documents the revision history for Test::DBIx::Class::Schema.
 
 {{$NEXT}}
+ - add documentation for 'glue' and 'schema' options [rupertl]
 
 1.0.2     2012-07-31 22:41:37 UTC
  - TODO: can't test relationships defined as CODE
@@ -17,7 +18,7 @@ This file documents the revision history for Test::DBIx::Class::Schema.
    - Add [PkgVersion] plugin; remove [PodVersion]
  - Git::NextVersion changes for x.y.z version format
  - Tidy up missing column/relation test output
- 
+
 0.01016   2011-09-16 17:00:09 Europe/London
  - Add test for unexpected columns in DB (jasontang)
  - Switch to using dzil's Git::NextVersion
