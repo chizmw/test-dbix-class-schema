@@ -1,6 +1,8 @@
 This file documents the revision history for Test::DBIx::Class::Schema.
 
 {{$NEXT}}
+ - Drop use of { AutoCommit => 1 } from DBHelper
+ - Remove BEGIN/COMMIT when creating spanish_inquisition
 
 1.0.3     2013-02-21 15:54:04 Europe/London
  - add documentation for 'glue' and 'schema' options [rupertl]
