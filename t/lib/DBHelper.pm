@@ -18,7 +18,10 @@ sub _database {
     my $dbuser = $ENV{"DBICTEST_DBUSER"} || '';
     my $dbpass = $ENV{"DBICTEST_DBPASS"} || '';
 
-    my @connect_info = ($dsn, $dbuser, $dbpass, { AutoCommit => 1 });
+    # we had some warnings telling us not to explicitly set AutoCommit
+    # so we've removed it from the connect_info and let everything else do
+    # what it does best
+    my @connect_info = ($dsn, $dbuser, $dbpass, { });
 
     return @connect_info;
 }
