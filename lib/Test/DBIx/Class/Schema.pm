@@ -212,7 +212,9 @@ sub _test_methods {
     foreach my $method_type (@{ $method_types} ) {
         SKIP: {
             skip qq{no $method_type methods}, 1
-                    unless @{ $self->{methods}{$method_type} };
+                    unless 
+                        exists     $self->{methods}{$method_type}
+                           and  @{ $self->{methods}{$method_type} };
             ok(
                 @{ $self->{methods}{$method_type} },
                 qq{$method_type list found for testing}
