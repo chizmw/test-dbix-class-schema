@@ -51,10 +51,18 @@ $schematest->methods({
 # stop TDCS from doing done_testing on our behalf
 $ENV{TEST_AGGREGATE} = 1;
 
+# isa_ok output changed in 0.99
+my $isa_expected =
+    q{ok 2 - An object of class 'TDCSTest::Schema' isa 'TDCSTest::Schema'};
+# if our Test::More is 'old' look for different output from isa_ok
+if ($Test::More::VERSION < 0.99) {
+    $isa_expected = q{ok 2 - The object isa TDCSTest::Schema};
+}
+
 use Test::Builder::Tester tests=>2;
 test_out(
     q{ok 1 - use TDCSTest::Schema;},
-    q{ok 2 - The object isa TDCSTest::Schema},
+    $isa_expected,
     q{ok 3 - The record object is a ::Artist},
     q{ok 4 - 'artistid' column defined in result_source},
     q{ok 5 - 'artistid' column exists in database},

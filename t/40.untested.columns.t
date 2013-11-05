@@ -35,12 +35,20 @@ $schematest->methods({
     resultsets => [],
 });
 
+# isa_ok output changed in 0.99
+my $isa_expected =
+    q{ok 2 - An object of class 'UnexpectedTest::Schema' isa 'UnexpectedTest::Schema'};
+# if our Test::More is 'old' look for different output from isa_ok
+if ($Test::More::VERSION < 0.99) {
+    $isa_expected = q{ok 2 - The object isa UnexpectedTest::Schema};
+}
+
 #
 ## All's good - no unexpected columns
 NO_SURPRISES: {
     test_out(
         q{ok 1 - use UnexpectedTest::Schema;},
-        q{ok 2 - The object isa UnexpectedTest::Schema},
+        $isa_expected,
         q{ok 3 - The record object is a ::SpanishInquisition},
         q{ok 4 - 'id' column defined in result_source},
         q{ok 5 - 'id' column exists in database},
@@ -70,7 +78,7 @@ FORGOT_TO_TEST: {
 
     test_out(
         q{ok 1 - use UnexpectedTest::Schema;},
-        q{ok 2 - The object isa UnexpectedTest::Schema},
+        $isa_expected,
         q{ok 3 - The record object is a ::SpanishInquisition},
         q{ok 4 - 'id' column defined in result_source},
         q{ok 5 - 'id' column exists in database},
