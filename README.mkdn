@@ -1,10 +1,10 @@
 # NAME
 
-Test::DBIx::Class::Schema
+Test::DBIx::Class::Schema - DBIx::Class schema sanity checking tests
 
 # VERSION
 
-version 0.01016
+version 1.0.6
 
 # SYNOPSIS
 
@@ -22,12 +22,13 @@ Create a test script that looks like this:
     my $schematest = Test::DBIx::Class::Schema->new(
         {
             # required
-            dsn       => 'dbi:Pg:dbname=mydb',
+            dsn       => 'dbi:Pg:dbname=mydb', # or use schema option
             namespace => 'MyDB::Schema',
             moniker   => 'SomeTable',
             # optional
             username  => 'some_user',
             password  => 'opensesame',
+            glue      => 'Result',             # fix class name if needed
             # rather than calling diag will test that all columns/relationships
             # are accounted for in your test and fail the test if not
             test_missing => 1,
@@ -71,9 +72,26 @@ Create a test script that looks like this:
 
 Run the test script:
 
-  prove -l t/schematest/xx.mydb.t
+    prove -l t/schematest/xx.mydb.t
 
-## done_testing
+## Options
+
+Either `dsn` (eg `dbi:Pg:dbname=mydb`) or `schema` (an already
+created schema object) must be set.
+
+If the database requires credentials, set `username` and `password`.
+
+`namespace`, `glue` and `moniker` define the class being tested.
+For example, if your class is `MyDB::Schema::Result::SomeTable` then use:
+
+    namespace => 'MyDB::Schema',
+    glue      => 'Result,
+    moniker   => 'SomeTable',
+
+`glue` is not required if the combination of `namespace` and `moniker`
+is enough to define the class, e.g. `MyDB::Schema::SomeTable`.
+
+## done\_testing
 
 Under normal circumstances there is no need to add `done_testing` to your
 test script; it's automatically called at the end of `run_tests()` _unless_
@@ -81,7 +99,7 @@ you are running tests under [Test::Aggregate](http://search.cpan.org/perldoc?Tes
 
 If you are running aggregated tests you will need to add
 
-  done_testing;
+    done_testing;
 
 to your top-level script.
 
@@ -97,10 +115,6 @@ As a lazy person myself I don't want to write numerous near-identical scripts.
 
 Test::DBIx::Class::Schema takes the copy-and-paste out of DBIC schema class testing.
 
-# NAME
-
-Test::DBIx::Class::Schema - DBIx::Class schema sanity checking tests
-
 # SEE ALSO
 
 [DBIx::Class](http://search.cpan.org/perldoc?DBIx::Class),
@@ -110,8 +124,9 @@ Test::DBIx::Class::Schema - DBIx::Class schema sanity checking tests
 # CONTRIBUTORS
 
 Gianni Ceccarelli `<dakkar@thenautilus.net>`,
-Darius Jokilehto
+Darius Jokilehto,
 Jason Tang `<tang.jason.ch@gmail.com>`,
+Rupert Lane ([https://github.com/rupertl](https://github.com/rupertl))
 
 # AUTHOR
 
@@ -119,7 +134,7 @@ Chisel Wright <chisel@chizography.net>
 
 # COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2011 by Chisel Wright.
+This software is copyright (c) 2013 by Chisel Wright.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
