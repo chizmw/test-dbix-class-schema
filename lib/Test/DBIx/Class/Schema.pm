@@ -46,7 +46,7 @@ sub run_tests {
     # create a new resultset object and perform tests on it
     # - this allows us to test ->my_column() without requiring data
     $rs = $schema->resultset( $self->{moniker} );
-    $record = $schema->resultset( $self->{moniker} )->new({});
+    $record = $schema->resultset( $self->{moniker} )->new_result({});
 
     # make sure our record presents itself as the correct object type
     if (defined $self->{glue}) {
