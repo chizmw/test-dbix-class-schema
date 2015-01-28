@@ -1,6 +1,10 @@
 This file documents the revision history for Test::DBIx::Class::Schema.
 
 {{$NEXT}}
+ - Fix bug with MooseX::NonMoose interaction
+   - Merge pull request #14 from jasontang/new_result
+ - Add 'test_missing => 1' tests
+ - Update dzil plugins used
 
 1.0.6     2013-11-05 10:34:01 Europe/London
  - deal with new isa_ok message format in test_out() tests

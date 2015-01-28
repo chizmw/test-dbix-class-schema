@@ -1,10 +1,14 @@
-# NAME
+# DESCRIPTION
 
-Test::DBIx::Class::Schema - DBIx::Class schema sanity checking tests
+It's really useful to be able to test and confirm that DBIC classes have and
+support a known set of methods.
 
-# VERSION
+Testing these one-by-one is more than tedious and likely to discourage you
+from writing the relevant test scripts.
 
-version 1.0.6
+As a lazy person myself I don't want to write numerous near-identical scripts.
+
+Test::DBIx::Class::Schema takes the copy-and-paste out of DBIC schema class testing.
 
 # SYNOPSIS
 
@@ -95,7 +99,7 @@ is enough to define the class, e.g. `MyDB::Schema::SomeTable`.
 
 Under normal circumstances there is no need to add `done_testing` to your
 test script; it's automatically called at the end of `run_tests()` _unless_
-you are running tests under [Test::Aggregate](http://search.cpan.org/perldoc?Test::Aggregate).
+you are running tests under [Test::Aggregate](https://metacpan.org/pod/Test::Aggregate).
 
 If you are running aggregated tests you will need to add
 
@@ -103,23 +107,11 @@ If you are running aggregated tests you will need to add
 
 to your top-level script.
 
-# DESCRIPTION
-
-It's really useful to be able to test and confirm that DBIC classes have and
-support a known set of methods.
-
-Testing these one-by-one is more than tedious and likely to discourage you
-from writing the relevant test scripts.
-
-As a lazy person myself I don't want to write numerous near-identical scripts.
-
-Test::DBIx::Class::Schema takes the copy-and-paste out of DBIC schema class testing.
-
 # SEE ALSO
 
-[DBIx::Class](http://search.cpan.org/perldoc?DBIx::Class),
-[Test::More](http://search.cpan.org/perldoc?Test::More),
-[Test::Aggregate](http://search.cpan.org/perldoc?Test::Aggregate)
+[DBIx::Class](https://metacpan.org/pod/DBIx::Class),
+[Test::More](https://metacpan.org/pod/Test::More),
+[Test::Aggregate](https://metacpan.org/pod/Test::Aggregate)
 
 # CONTRIBUTORS
 
@@ -127,14 +119,3 @@ Gianni Ceccarelli `<dakkar@thenautilus.net>`,
 Darius Jokilehto,
 Jason Tang `<tang.jason.ch@gmail.com>`,
 Rupert Lane ([https://github.com/rupertl](https://github.com/rupertl))
-
-# AUTHOR
-
-Chisel Wright <chisel@chizography.net>
-
-# COPYRIGHT AND LICENSE
-
-This software is copyright (c) 2013 by Chisel Wright.
-
-This is free software; you can redistribute it and/or modify it under
-the same terms as the Perl 5 programming language system itself.
