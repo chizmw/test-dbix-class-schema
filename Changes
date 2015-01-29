@@ -1,6 +1,8 @@
 This file documents the revision history for Test::DBIx::Class::Schema.
 
 {{$NEXT}}
+
+1.0.7     2015-01-29 17:59:09+00:00 Europe/London
  - Fix bug with MooseX::NonMoose interaction
    - Merge pull request #14 from jasontang/new_result
  - Update dzil plugins used
