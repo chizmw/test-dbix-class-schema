@@ -61,7 +61,7 @@ curl -X POST "https://api.buildkite.com/v1/organizations/${BUILDKITE_ORGSLUG}/pr
 
       {
         "type": "script",
-        "name": "dzil (authordeps)",
+        "name": "dzil (distrodeps)",
         "command": "script/buildkite/dzil-distrodeps",
         "agent_query_rules": [
             "org=chizography"
