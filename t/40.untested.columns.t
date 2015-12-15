@@ -43,23 +43,30 @@ if ($Test::More::VERSION < 0.99) {
     $isa_expected = q{ok 2 - The object isa UnexpectedTest::Schema};
 }
 
+my @expected_out = (
+    q{ok 1 - use UnexpectedTest::Schema;},
+    $isa_expected,
+    q{ok 3 - The record object is a ::SpanishInquisition},
+    q{ok 4 - 'id' column defined in result_source},
+    q{ok 5 - 'id' column exists in database},
+    q{ok 6 - 'name' column defined in result_source},
+    q{ok 7 - 'name' column exists in database},
+    q{ok 8 # skip no relations methods},
+    q{ok 9 # skip no custom methods},
+    q{ok 10 # skip no resultsets methods},
+);
+
+# hackety-hack! fudge!
+if ($Test::More::VERSION < 1.3) {
+    push @expected_out,
+         q{not ok 11 - planned to run 4 but done_testing() expects 10}
+}
+
 #
 ## All's good - no unexpected columns
 NO_SURPRISES: {
     test_out(
-        q{ok 1 - use UnexpectedTest::Schema;},
-        $isa_expected,
-        q{ok 3 - The record object is a ::SpanishInquisition},
-        q{ok 4 - 'id' column defined in result_source},
-        q{ok 5 - 'id' column exists in database},
-        q{ok 6 - 'name' column defined in result_source},
-        q{ok 7 - 'name' column exists in database},
-        q{ok 8 # skip no relations methods},
-        q{ok 9 # skip no custom methods},
-        q{ok 10 # skip no resultsets methods},
-
-        # hackety-hack! fudge!
-        q{not ok 11 - planned to run 4 but done_testing() expects 10},
+        @expected_out,
     );
 
     $schematest->run_tests();
