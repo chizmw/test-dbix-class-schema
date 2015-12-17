@@ -4,6 +4,7 @@ This file documents the revision history for Test::DBIx::Class::Schema.
  - add ContributorsFromGit
    and remove hand-written contributors
  - add CopyFilesFromBuild
+ - allow README.mkdn to be 'dirty' from git's perspective
 
 1.0.8     2015-12-17 17:04:43+00:00 UTC
  - fix tests when Test::More >= 1.3 (issue #12 / pull #15)
