@@ -403,11 +403,4 @@ L<DBIx::Class>,
 L<Test::More>,
 L<Test::Aggregate>
 
-=head1 CONTRIBUTORS
-
-Gianni Ceccarelli C<< <dakkar@thenautilus.net> >>,
-Darius Jokilehto,
-Jason Tang C<< <tang.jason.ch@gmail.com> >>,
-Rupert Lane (L<https://github.com/rupertl>)
-
 =cut

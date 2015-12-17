@@ -112,10 +112,3 @@ to your top-level script.
 [DBIx::Class](https://metacpan.org/pod/DBIx::Class),
 [Test::More](https://metacpan.org/pod/Test::More),
 [Test::Aggregate](https://metacpan.org/pod/Test::Aggregate)
-
-# CONTRIBUTORS
-
-Gianni Ceccarelli `<dakkar@thenautilus.net>`,
-Darius Jokilehto,
-Jason Tang `<tang.jason.ch@gmail.com>`,
-Rupert Lane ([https://github.com/rupertl](https://github.com/rupertl))
