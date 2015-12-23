@@ -1,14 +1,10 @@
-# DESCRIPTION
+# NAME
 
-It's really useful to be able to test and confirm that DBIC classes have and
-support a known set of methods.
+Test::DBIx::Class::Schema - DBIx::Class schema sanity checking tests
 
-Testing these one-by-one is more than tedious and likely to discourage you
-from writing the relevant test scripts.
+# VERSION
 
-As a lazy person myself I don't want to write numerous near-identical scripts.
-
-Test::DBIx::Class::Schema takes the copy-and-paste out of DBIC schema class testing.
+version 1.0.9
 
 # SYNOPSIS
 
@@ -107,8 +103,43 @@ If you are running aggregated tests you will need to add
 
 to your top-level script.
 
+# DESCRIPTION
+
+It's really useful to be able to test and confirm that DBIC classes have and
+support a known set of methods.
+
+Testing these one-by-one is more than tedious and likely to discourage you
+from writing the relevant test scripts.
+
+As a lazy person myself I don't want to write numerous near-identical scripts.
+
+Test::DBIx::Class::Schema takes the copy-and-paste out of DBIC schema class testing.
+
 # SEE ALSO
 
 [DBIx::Class](https://metacpan.org/pod/DBIx::Class),
 [Test::More](https://metacpan.org/pod/Test::More),
 [Test::Aggregate](https://metacpan.org/pod/Test::Aggregate)
+
+# AUTHOR
+
+Chisel Wright <chisel@chizography.net>
+
+# COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2015 by Chisel Wright.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+# CONTRIBUTORS
+
+- Chisel <chisel.wright@net-a-porter.com>
+- Chisel <chisel@chizography.net>
+- Chisel Wright <chisel.wright@net-a-porter.com>
+- Chisel Wright <chisel@cleavag.es>
+- Chisel Wright <chisel@herlpacker.co.uk>
+- Darius Jokilehto <darius.jokilehto@net-a-porter.com>
+- Dave Cross <davidc@broadbean.com>
+- Jason Tang <tang.jason.ch@gmail.com>
+- Rupert Lane <rupert@rupert-lane.org>
