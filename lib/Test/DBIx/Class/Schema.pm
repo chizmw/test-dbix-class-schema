@@ -79,9 +79,12 @@ sub run_tests {
 
     # TODO: test custom, resultsets
 
-    my $tb = Test::More->builder;
+    my $ctx = Test::More->builder->ctx;
+    my $tb2_already_done_testing =
+        defined $ctx->snapshot->hub->meta('Test::Builder')->{Done_Testing};
+    $ctx->release;
     done_testing
-        unless ($tb->{Done_Testing} || $ENV{TEST_AGGREGATE});
+        unless ($tb2_already_done_testing || $ENV{TEST_AGGREGATE});
 }
 
 sub _test_normal_methods {
