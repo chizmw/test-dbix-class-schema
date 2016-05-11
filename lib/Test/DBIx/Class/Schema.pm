@@ -5,7 +5,9 @@ use strict;
 use warnings;
 
 # ensure we have "done_testing"
-use Test::More 0.92;
+# we also want to be sure we're using the recent enough version to fix a bug
+# in the output (https://github.com/chiselwright/test-dbix-class-schema/issues/12)
+use Test::More 1.302015;
 
 sub new {
     my ($proto, $options) = @_;
