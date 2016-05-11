@@ -57,7 +57,7 @@ my @expected_out = (
 );
 
 # hackety-hack! fudge!
-if ($Test::More::VERSION < 1.3) {
+if (!exists $INC{'Test2/Event/Diag.pm'}) {
     push @expected_out,
          q{not ok 11 - planned to run 4 but done_testing() expects 10}
 }
