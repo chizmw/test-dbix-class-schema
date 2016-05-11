@@ -1,6 +1,7 @@
 This file documents the revision history for Test::DBIx::Class::Schema.
 
 {{$NEXT}}
+ - replace ContributorsFromGit with Git::Contributors
 
 1.0.9     2015-12-23 12:08:56+00:00 UTC
  - add ContributorsFromGit
