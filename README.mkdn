@@ -121,6 +121,12 @@ Test::DBIx::Class::Schema takes the copy-and-paste out of DBIC schema class test
 [Test::More](https://metacpan.org/pod/Test::More),
 [Test::Aggregate](https://metacpan.org/pod/Test::Aggregate)
 
+## BUILD STATUS
+
+### master
+
+[![Build status](https://badge.buildkite.com/c8793ab59e31d982dd759cadfb66a308d5278f21cb707d8822.svg?branch=master)](https://buildkite.com/chizography/test-dbix-class-schema)
+
 # AUTHOR
 
 Chisel Wright <chisel@chizography.net>
