@@ -5,7 +5,9 @@ use strict;
 use warnings;
 
 # ensure we have "done_testing"
-use Test::More 0.92;
+# we also want to be sure we're using the recent enough version to fix a bug
+# in the output (https://github.com/chiselwright/test-dbix-class-schema/issues/12)
+use Test::More 1.302015;
 
 sub new {
     my ($proto, $options) = @_;
@@ -77,9 +79,12 @@ sub run_tests {
 
     # TODO: test custom, resultsets
 
-    my $tb = Test::More->builder;
+    my $ctx = Test::More->builder->ctx;
+    my $tb2_already_done_testing =
+        defined $ctx->snapshot->hub->meta('Test::Builder')->{Done_Testing};
+    $ctx->release;
     done_testing
-        unless ($tb->{Done_Testing} || $ENV{TEST_AGGREGATE});
+        unless ($tb2_already_done_testing || $ENV{TEST_AGGREGATE});
 }
 
 sub _test_normal_methods {
@@ -402,5 +407,16 @@ to your top-level script.
 L<DBIx::Class>,
 L<Test::More>,
 L<Test::Aggregate>
+
+=begin markdown
+
+## BUILD STATUS
+
+### master
+
+[![Build status](https://badge.buildkite.com/c8793ab59e31d982dd759cadfb66a308d5278f21cb707d8822.svg?branch=master)](https://buildkite.com/chizography/test-dbix-class-schema)
+
+=end markdown
+
 
 =cut

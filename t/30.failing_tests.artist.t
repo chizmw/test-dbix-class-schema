@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More 0.92;
+use Test::More 1.302015;
 use lib qw(t/lib);
 use TDCSTest;
 
