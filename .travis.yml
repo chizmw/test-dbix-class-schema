@@ -1,0 +1,33 @@
+dist: trusty
+language: perl
+perl:
+- '5.22'    # because there's no 5.22.2 :(
+- '5.20.3'
+- '5.18.2'  # because it's all that seems to be available
+before_install:
+- git clone git://github.com/haarg/perl-travis-helper
+- source perl-travis-helper/init
+- build-perl
+- perl -V
+- cpan-install Dist::Zilla~6.008
+- git config --global user.email "travis.ci@chizography.net"
+- git config --global user.name "Travis CI"
+- build-dist
+- cd $BUILD_DIR
+install:
+- export RELEASE_TESTING=1 AUTOMATED_TESTING=1 AUTHOR_TESTING=1 HARNESS_OPTIONS=c
+  HARNESS_TIMER=1
+- cpanm --quiet --notest Devel::Cover::Report::Coveralls
+- cpanm --quiet --notest --installdeps .
+script:
+- PERL5OPT=-MDevel::Cover=-coverage,statement,branch,condition,path,subroutine prove
+  -lrsv t
+- cover
+after_success:
+- cover -report coveralls
+notifications:
+  slack:
+    secure: E6c9iRoB1FzBgO4mAqkgzhhNVV92p8EADvtHPP63Qy8anN7gbsK7y+02p/NASx09kKE83N5uJ74HY1mAD2jUCOM+0j8TlmiRAMtUyRKBwZt4guk1MquY9Vxnh+JoHdLmQEDoaozq8a6IvFH3gC8cMD1MIXvKXJqpH3KAsfeNNJWo9EycYQTfDZ0eHCNLPF0HnJTSWr8PgxS1aRIGR/uzbCB+DMe6TXzYlKCsBlQ/1ZxsuILDFxyb0YixhHSnMggU5g7dl8cBIWZYzoDwG0kEAlZddRc6l/mvcGB3Arn7oGYCKtEABBKaOdaTfu/rQcKEbRyxQAlVEnfOt3VIzhYsVWWj97INAAJILhtn15AAik4FrXH1UgsAqreH8Pm8wRTZZs9UK/P5ZnX1TzpJkYIv+3EKSRu8uck8ZWKDvSyCac/jr4EguMvcYmv+w/Jhk61YK0Ed6/YGupAcupx5vFGEhfopLoZAOrnIpr9E6WiDNr1A3PWdEYfNocOc9sQSd8ov4xShy2H2K0E3Hv+NV1SnnYV9vQFkQZRqiXABSXvCGLlbV4tBveXw1mzvueRfdbKyh0nHtxVktfHsZgWmVJO+jEKgKlPLPi7OZiwZjzEe/VtVsURCvqw0/cTY6VWeDWjXbXCdfGMRTH0xMtd8okUNgwV8RvaGT89EkbdCOr3sd5E=
+matrix:
+  allow_failures:
+    - perl: blead       # ignore failures for blead perl
