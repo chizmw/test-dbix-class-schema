@@ -414,7 +414,7 @@ L<Test::Aggregate>
 
 ### master
 
-[![Build status](https://badge.buildkite.com/c8793ab59e31d982dd759cadfb66a308d5278f21cb707d8822.svg?branch=master)](https://buildkite.com/chizography/test-dbix-class-schema)
+[![Build Status](https://travis-ci.org/chiselwright/test-dbix-class-schema.svg?branch=master)](https://travis-ci.org/chiselwright/test-dbix-class-schema)
 
 =end markdown
 
