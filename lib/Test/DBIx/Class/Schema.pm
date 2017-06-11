@@ -98,7 +98,7 @@ sub _test_normal_methods {
     my @proxied;
     foreach my $method_type (@std_method_types) {
         SKIP: {
-            if (not @{ $self->{methods}{$method_type} }) {
+            if (not exists $self->{methods}{$method_type} or not @{ $self->{methods}{$method_type} }) {
                 skip qq{no $method_type methods}, 1;
             }
 
@@ -245,28 +245,34 @@ sub _test_unexpected_normal_methods {
     };
 
     foreach my $method_type (sort keys %{$set}) {
-        my @diff = $self->_diff_arrays(
-            $self->{methods}->{$method_type},
-            $set->{$method_type},
-        );
+        SKIP: {
+            if (not exists $self->{methods}->{$method_type} or not @{ $self->{methods}->{$method_type} }) {
+                skip qq{no $method_type methods}, 1;
+            }
 
-        my $plural = (scalar @diff == 1) ? '' : 's';
-        my $message =
-            qq{'$method_type' method${plural} defined in }
-            . $self->{moniker}
-            . ' but untested: '
-            . join(', ',@diff);
-
-        if ($self->{test_missing}) {
-            is_deeply(
-                \@diff,
-                [],
-                "All known $method_type method${plural} defined in test"
-            ) || diag $message;
-        }
-        else {
-            if (scalar @diff) {
-               diag $message;
+            my @diff = $self->_diff_arrays(
+                $self->{methods}->{$method_type},
+                $set->{$method_type},
+            );
+    
+            my $plural = (scalar @diff == 1) ? '' : 's';
+            my $message =
+                qq{'$method_type' method${plural} defined in }
+                . $self->{moniker}
+                . ' but untested: '
+                . join(', ',@diff);
+    
+            if ($self->{test_missing}) {
+                is_deeply(
+                    \@diff,
+                    [],
+                    "All known $method_type method${plural} defined in test"
+                ) || diag $message;
+            }
+            else {
+                if (scalar @diff) {
+                   diag $message;
+                }
             }
         }
     }
