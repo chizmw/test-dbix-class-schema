@@ -408,6 +408,11 @@ If you are running aggregated tests you will need to add
 
 to your top-level script.
 
+If you are running under L<Test::Class::Moose> or L<Test::Class> you will need to
+disable this behaviour manually as there is no way to detect it. To do that,
+set C<$ENV{TEST_AGGREGATE} = 1> before calling C<run_tests> or your test suite
+might blow up.
+
 =head1 SEE ALSO
 
 L<DBIx::Class>,
